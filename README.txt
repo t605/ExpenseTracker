@@ -90,6 +90,29 @@ Start with an empty app (see "Where your data is kept" to reset it).
     Notepad. A description that starts with = + - or @ is saved with a leading
     apostrophe so a spreadsheet cannot run it as a formula.
 
+ g2) Currency
+    The box in the top bar offers shekel, dollar and euro. It changes only the
+    symbol shown everywhere; amounts are NOT converted. It is remembered.
+
+ g3) Cloud page (menu "Cloud") - a DEMO: nothing leaves this computer
+    Export tab:  choose a report (Full data, Tax report, Monthly summary,
+      Category analysis) and a destination. "This device" really downloads a
+      CSV. Email, Google Sheets, Google Drive, Dropbox and OneDrive are
+      simulated: progress is shown and the result is stored in History, but no
+      email is sent and no service is contacted. The preview shows the real
+      numbers and a data check (duplicates, future dates...). Try the address
+      bounce@fail.example to see a failed delivery, then "Retry" in History.
+    Connections: "Connect" shows a pretend consent screen (no password).
+    Schedules:   daily / weekly / monthly. They run while the app is open and
+      are made up when you open it again ("catch-up"). "Simulate being away"
+      demonstrates this. A web page cannot run while it is closed.
+    Share links: the report is packed into the link (nothing is uploaded).
+      Anyone with the link can read it; it cannot be recalled (Revoke works on
+      this browser only). A QR code is shown. Opening the link shows the
+      report on the /shared page. The link only works where the app is
+      reachable: on this computer it opens here only.
+    History:     every export with time, status, size and a SHA-256 fingerprint.
+
  h) Dashboard
     Check that "Spent in <month>" and the 6-month bars match what you entered,
     and that the category percentages add up to 100%.

@@ -3,6 +3,7 @@ import "./globals.css";
 import { ExpensesProvider } from "@/components/ExpensesProvider";
 import { ToastProvider } from "@/components/Toasts";
 import { CurrencyProvider } from "@/components/CurrencyProvider";
+import { CloudProvider } from "@/components/cloud/CloudProvider";
 import { ExpenseActionsProvider } from "@/components/ExpenseActions";
 import { Header } from "@/components/Header";
 import { StorageBanner } from "@/components/StorageBanner";
@@ -19,11 +20,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ExpensesProvider>
           <CurrencyProvider>
             <ToastProvider>
-              <ExpenseActionsProvider>
-                <Header />
-                <StorageBanner />
-                <main className="mx-auto max-w-5xl px-4 py-6 sm:py-8">{children}</main>
-              </ExpenseActionsProvider>
+              <CloudProvider>
+                <ExpenseActionsProvider>
+                  <Header />
+                  <StorageBanner />
+                  <main className="mx-auto max-w-5xl px-4 py-6 sm:py-8">{children}</main>
+                </ExpenseActionsProvider>
+              </CloudProvider>
             </ToastProvider>
           </CurrencyProvider>
         </ExpensesProvider>

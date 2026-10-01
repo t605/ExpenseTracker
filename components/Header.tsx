@@ -10,6 +10,7 @@ import { CURRENCY_INFO } from "@/lib/currency";
 const LINKS = [
   { href: "/", label: "Dashboard" },
   { href: "/expenses", label: "Expenses" },
+  { href: "/cloud", label: "Cloud" },
 ];
 
 export function Header() {
@@ -19,33 +20,32 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
-        <div className="flex items-center gap-4 sm:gap-8">
-          <Link href="/" className="flex items-center gap-2 font-semibold text-slate-900">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white" aria-hidden="true">
-              {CURRENCY_INFO[currency].symbol}
-            </span>
-            <span className="hidden sm:inline">Expense Tracker</span>
-          </Link>
-          <nav aria-label="Main" className="flex gap-1">
-            {LINKS.map((l) => {
-              const active = pathname === l.href;
-              return (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-                    active ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:bg-slate-100"
-                  }`}
-                >
-                  {l.label}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-        <div className="flex items-center gap-2">
+      {/* On a phone the links drop to their own row (order-3) so nothing is cut off. */}
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 sm:gap-x-8">
+        <Link href="/" className="order-1 flex items-center gap-2 font-semibold text-slate-900">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white" aria-hidden="true">
+            {CURRENCY_INFO[currency].symbol}
+          </span>
+          <span className="hidden sm:inline">Expense Tracker</span>
+        </Link>
+        <nav aria-label="Main" className="order-3 flex w-full gap-1 sm:order-2 sm:w-auto">
+          {LINKS.map((l) => {
+            const active = pathname === l.href;
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                aria-current={active ? "page" : undefined}
+                className={`rounded-md px-3 py-1.5 text-sm font-medium ${
+                  active ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:bg-slate-100"
+                }`}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
+        </nav>
+        <div className="order-2 ml-auto flex items-center gap-2 sm:order-3">
           <CurrencySelect />
           <button
             type="button"

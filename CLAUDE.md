@@ -18,12 +18,33 @@ base for the Best-of-N pattern exercises. Private GitHub repository (`t605/Expen
 - **No dark mode.** Light only (`color-scheme: light`).
 - CSV cells starting with `= + - @` get a leading apostrophe (spreadsheet formula injection).
 - Fonts are the system stack on purpose: no network needed to build.
+- **Currency (ILS / USD / EUR) is a display choice only.** Amounts are plain cents with no currency; switching
+  changes the symbol, never the numbers. Always format money with `useCurrency().formatMoney`.
+- **The "Cloud" page (`/cloud`) is a SIMULATION.** No email is sent, no service is contacted, no credentials are
+  asked for; the "connected account" is a fixed demo name. Say so in the UI (it does). Do not make it look real.
+  Exception, and the real parts: the "This device" download, the report templates (real numbers), the SHA-256
+  fingerprints, the share links and the QR codes.
+- **Share links need no server:** the report is deflated into the `#fragment` of `/shared#...`. Consequences that
+  are shown to the user: anyone with the link can read it, it cannot be recalled (Revoke works on this browser only),
+  expiry is checked by the viewer page (courtesy, not security). Decoded links are untrusted: size-capped and
+  validated in `lib/cloud/share.ts`.
+- **Schedules cannot run while the page is closed.** They run while the app is open (every 30 s) and make up a
+  missed run when the app is opened ("catch-up" in History). Do not claim real background jobs without a server.
+- **One added dependency: `qrcode-generator`** (tiny, no dependencies) for real QR codes.
+- Cloud settings/history/shares live in localStorage `expense-tracker:cloud:v1`, read in an effect and not written
+  before the first successful read (same rule as the expenses).
 
 ## Files
 - `app/page.tsx` Dashboard, `app/expenses/page.tsx` list + filters + export, `app/layout.tsx` providers.
 - `components/` UI. `ExpensesProvider` (data), `ExpenseActions` (add/edit/delete dialogs), `Toasts`.
 - `lib/` all logic and the only place with rules: `format`, `validation`, `filter`, `analytics`, `csv`, `storage`, `types`.
-- `tests/lib.test.ts` unit tests for `lib/`.
+- `lib/currency.ts`, `components/CurrencyProvider.tsx`, `CurrencySelect.tsx` currency choice.
+- `lib/cloud/` logic of the Cloud page: `templates` (Tax report, Monthly summary, Category analysis, Full data),
+  `schedule`, `share`, `health` (pre-flight data check), `simulate`, `state` (validates saved data), `catalog`, `util`.
+- `components/cloud/` UI: `CloudProvider` (state, scheduler), `CloudHub` (tabs), `ExportTab`, `SchedulesTab`,
+  `ConnectionsTab`, `ConnectModal`, `SharesTab`, `QRCode`, `HistoryTab`, `SyncStatusBar`, `SharedViewer`.
+  Routes: `app/cloud/page.tsx`, `app/shared/page.tsx`.
+- `tests/lib.test.ts`, `tests/currency.test.ts`, `tests/cloud.test.ts` unit tests for `lib/`.
 
 ## Running
 `npm install`, then `npm run dev` (add `-- -p 3123` for another port).

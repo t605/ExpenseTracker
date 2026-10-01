@@ -39,7 +39,15 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+        <Link
+          href="/cloud"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          Export &amp; share
+        </Link>
+      </div>
       <SummaryCards expenses={expenses} now={now} />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card title="Spending by category">
