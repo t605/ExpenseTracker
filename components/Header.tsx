@@ -44,9 +44,10 @@ export function Header() {
         <button
           type="button"
           onClick={openAdd}
-          className="rounded-lg bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700"
+          className="whitespace-nowrap rounded-lg bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700"
         >
-          + Add expense
+          <span className="sm:hidden">+ Add</span>
+          <span className="hidden sm:inline">+ Add expense</span>
         </button>
       </div>
     </header>

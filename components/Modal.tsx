@@ -15,7 +15,11 @@ export function Modal({ title, onClose, children }: ModalProps) {
   useEffect(() => {
     const previouslyFocused = document.activeElement as HTMLElement | null;
     const panel = panelRef.current;
-    panel?.querySelector<HTMLElement>("input, select, textarea, button")?.focus();
+    // First form field if there is one (add/edit); otherwise the first button (delete confirm).
+    (
+      panel?.querySelector<HTMLElement>("input, select, textarea") ??
+      panel?.querySelector<HTMLElement>("button")
+    )?.focus();
 
     function onKey(event: KeyboardEvent) {
       if (event.key === "Escape") onClose();
