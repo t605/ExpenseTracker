@@ -46,6 +46,23 @@ base for the Best-of-N pattern exercises. Private GitHub repository (`t605/Expen
   Routes: `app/cloud/page.tsx`, `app/shared/page.tsx`.
 - `tests/lib.test.ts`, `tests/currency.test.ts`, `tests/cloud.test.ts` unit tests for `lib/`.
 
+## Prompt for a similar project
+Written at the wrap-up (2026-10-01): the single prompt that would have reached this result in the fewest rounds.
+Copy it, replace the facts in <>, keep the structure.
+```
+Project: <what it is, stack>. Goal: <outcome>. Baseline: <branch/commit>.
+My environment: <OS, tools, locale, how I open the results (e.g. Excel with ";" list separator)>.
+Data facts: <languages (Hebrew/Russian), formats, units, what must never change (money = whole cents)>.
+Versions/steps: <one short brief each, ALL pasted now: V1 simple, V2 advanced local, V3 cloud demo>.
+Hard rules: branch names are exact (if one exists, rename the old one to <name>-old and tell me, never delete);
+never push, publish or change GitHub settings; never contact a real service; label everything simulated in the UI.
+Done means: tests + typecheck + lint + build pass before each commit; checked in the real browser with real data
+(Hebrew, quotes, a "=" description); tell me what was NOT tested; leave the test server running until I say stop.
+After: <publish plan: where, which version, what must not be public (email, logo, secrets)>.
+```
+Biggest detours it prevents: V3 brief arriving late; branch-name clashes; CSV opening in one column (semicolon Excel);
+ambiguous "currency change" (display symbol only); unclear "original branch"; going public decided only at the end.
+
 ## Running
 `npm install`, then `npm run dev` (add `-- -p 3123` for another port).
 
