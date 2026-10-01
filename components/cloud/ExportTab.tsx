@@ -10,7 +10,16 @@ import { useExpenses } from "../ExpensesProvider";
 import { useCurrency } from "../CurrencyProvider";
 import { useCloud } from "./CloudProvider";
 import { ReportTable } from "./ReportTable";
-import { CopyButton, ServiceBadge, Spinner, StatusPill, fieldClass, labelClass, primaryButton, secondaryButton } from "./ui";
+import {
+  CopyButton,
+  ServiceBadge,
+  Spinner,
+  StatusPill,
+  fieldClass,
+  labelClass,
+  primaryButton,
+  secondaryButton,
+} from "./ui";
 
 /** Pre-selects a template and destination (used by "Retry" in History). `nonce` makes each retry count. */
 export interface ExportPreset {
@@ -53,12 +62,12 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
   const blocker = otherExportRunning
     ? "Another export is running. Please wait a moment."
     : report.recordCount === 0
-    ? "There is nothing to export for this template yet."
-    : needsConnect
-      ? `Connect ${info.label} to continue.`
-      : emailBad
-        ? "Enter the recipient's email address."
-        : "";
+      ? "There is nothing to export for this template yet."
+      : needsConnect
+        ? `Connect ${info.label} to continue.`
+        : emailBad
+          ? "Enter the recipient's email address."
+          : "";
 
   async function send() {
     if (blocker || running) return;
@@ -82,7 +91,13 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
   }
 
   const actionLabel =
-    info.kind === "local" ? "Download CSV" : info.kind === "email" ? "Send email" : info.kind === "sheets" ? "Create spreadsheet" : `Upload to ${info.label}`;
+    info.kind === "local"
+      ? "Download CSV"
+      : info.kind === "email"
+        ? "Send email"
+        : info.kind === "sheets"
+          ? "Create spreadsheet"
+          : `Upload to ${info.label}`;
 
   return (
     <div className="grid gap-6 lg:grid-cols-5">
@@ -90,7 +105,9 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
         {/* 1. Template */}
         <section aria-labelledby="step-template">
           <h2 id="step-template" className="mb-2 text-sm font-semibold text-slate-900">
-            <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">1</span>
+            <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">
+              1
+            </span>
             Choose a report
           </h2>
           <div className="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Report template">
@@ -123,7 +140,9 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
         {/* 2. Destination */}
         <section aria-labelledby="step-destination">
           <h2 id="step-destination" className="mb-2 text-sm font-semibold text-slate-900">
-            <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">2</span>
+            <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">
+              2
+            </span>
             Choose where it goes
           </h2>
           <div className="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Destination">
@@ -151,7 +170,11 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
                       <span className="block truncate text-xs text-slate-500">{d.blurb}</span>
                     </span>
                     {d.needsConnection &&
-                      (connected ? <StatusPill tone="green">Connected</StatusPill> : <StatusPill tone="slate">Not connected</StatusPill>)}
+                      (connected ? (
+                        <StatusPill tone="green">Connected</StatusPill>
+                      ) : (
+                        <StatusPill tone="slate">Not connected</StatusPill>
+                      ))}
                   </span>
                 </label>
               );
@@ -162,7 +185,9 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
         {/* 3. Details */}
         <section aria-labelledby="step-details">
           <h2 id="step-details" className="mb-2 text-sm font-semibold text-slate-900">
-            <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">3</span>
+            <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">
+              3
+            </span>
             Details
           </h2>
           <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -176,7 +201,8 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
             )}
             {info.kind === "local" && (
               <p className="text-sm text-slate-600">
-                A CSV file will be saved to your Downloads folder. Nothing is uploaded. This is the one real destination.
+                A CSV file will be saved to your Downloads folder. Nothing is uploaded. This is the one real
+                destination.
               </p>
             )}
             {info.kind === "email" && (
@@ -195,8 +221,8 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
                     className={fieldClass}
                   />
                   <p className="mt-1 text-xs text-slate-500">
-                    Simulated: no email is sent. Try <code className="rounded bg-slate-100 px-1">bounce@fail.example</code> to see
-                    a failed delivery.
+                    Simulated: no email is sent. Try{" "}
+                    <code className="rounded bg-slate-100 px-1">bounce@fail.example</code> to see a failed delivery.
                   </p>
                 </div>
                 <div>
@@ -259,7 +285,8 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
             <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Preview</p>
             <h2 className="text-lg font-semibold text-slate-900">{report.title}</h2>
             <p className="text-xs text-slate-600">
-              {report.subtitle} &middot; {report.recordCount} expense{report.recordCount === 1 ? "" : "s"} &middot; {currency}
+              {report.subtitle} &middot; {report.recordCount} expense{report.recordCount === 1 ? "" : "s"} &middot;{" "}
+              {currency}
             </p>
           </div>
 
@@ -283,17 +310,31 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
           )}
 
           {report.recordCount > 0 ? (
-            <ReportTable columns={report.columns} rows={report.rows} footer={report.footer} limit={6} caption={`${report.title} preview`} />
+            <ReportTable
+              columns={report.columns}
+              rows={report.rows}
+              footer={report.footer}
+              limit={6}
+              caption={`${report.title} preview`}
+            />
           ) : (
-            <p className="rounded-xl border border-dashed border-slate-300 p-4 text-center text-sm text-slate-500">No rows to show.</p>
+            <p className="rounded-xl border border-dashed border-slate-300 p-4 text-center text-sm text-slate-500">
+              No rows to show.
+            </p>
           )}
 
           {running && activity ? (
             <ol className="space-y-1.5 rounded-xl bg-slate-50 p-3 text-sm" aria-label="Progress">
               {activity.steps.map((label, i) => (
-                <li key={label} className={`flex items-center gap-2 ${i > activity.index ? "text-slate-400" : "text-slate-800"}`}>
+                <li
+                  key={label}
+                  className={`flex items-center gap-2 ${i > activity.index ? "text-slate-400" : "text-slate-800"}`}
+                >
                   {i < activity.index ? (
-                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[10px] text-white" aria-label="done">
+                    <span
+                      className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[10px] text-white"
+                      aria-label="done"
+                    >
                       &#10003;
                     </span>
                   ) : i === activity.index ? (
@@ -307,7 +348,12 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
             </ol>
           ) : (
             <div>
-              <button type="button" onClick={() => void send()} disabled={Boolean(blocker) || running} className={`${primaryButton} w-full`}>
+              <button
+                type="button"
+                onClick={() => void send()}
+                disabled={Boolean(blocker) || running}
+                className={`${primaryButton} w-full`}
+              >
                 {running ? (
                   <>
                     <Spinner /> Working...
@@ -327,7 +373,15 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
   );
 }
 
-function ResultCard({ entry, onAgain, onGoTo }: { entry: HistoryEntry; onAgain: () => void; onGoTo: ExportTabProps["onGoTo"] }) {
+function ResultCard({
+  entry,
+  onAgain,
+  onGoTo,
+}: {
+  entry: HistoryEntry;
+  onAgain: () => void;
+  onGoTo: ExportTabProps["onGoTo"];
+}) {
   const ok = entry.status === "success";
   const info = DESTINATIONS[entry.destination];
   return (
@@ -351,7 +405,11 @@ function ResultCard({ entry, onAgain, onGoTo }: { entry: HistoryEntry; onAgain: 
           <dt className="text-emerald-700">Fingerprint</dt>
           <dd className="flex flex-wrap items-center gap-2">
             <code className="rounded bg-white/70 px-1">{entry.fingerprint.slice(0, 12)}</code>
-            <CopyButton text={entry.fingerprint} label="Copy SHA-256" className="rounded-md px-2 py-0.5 text-xs font-medium text-emerald-800 underline" />
+            <CopyButton
+              text={entry.fingerprint}
+              label="Copy SHA-256"
+              className="rounded-md px-2 py-0.5 text-xs font-medium text-emerald-800 underline"
+            />
           </dd>
         </dl>
       ) : (

@@ -22,7 +22,11 @@ export function dataHealth(expenses: Expense[], now: Date = new Date()): HealthI
   const today = todayISO(now);
   const future = expenses.filter((e) => e.date > today).length;
   if (future > 0) {
-    issues.push({ id: "future", level: "warn", message: `${plural(future, "expense is", "expenses are")} dated in the future.` });
+    issues.push({
+      id: "future",
+      level: "warn",
+      message: `${plural(future, "expense is", "expenses are")} dated in the future.`,
+    });
   }
 
   const seen = new Map<string, number>();

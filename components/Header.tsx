@@ -23,7 +23,10 @@ export function Header() {
       {/* On a phone the links drop to their own row (order-3) so nothing is cut off. */}
       <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 sm:gap-x-8">
         <Link href="/" className="order-1 flex items-center gap-2 font-semibold text-slate-900">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white" aria-hidden="true">
+          <span
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white"
+            aria-hidden="true"
+          >
             {CURRENCY_INFO[currency].symbol}
           </span>
           <span className="hidden sm:inline">Expense Tracker</span>

@@ -9,7 +9,7 @@ export type Currency = (typeof CURRENCIES)[number];
 export const DEFAULT_CURRENCY: Currency = "USD";
 
 export const CURRENCY_INFO: Record<Currency, { symbol: string; label: string }> = {
-  ILS: { symbol: "₪", label: "₪ ש\"ח" },
+  ILS: { symbol: "₪", label: '₪ ש"ח' },
   USD: { symbol: "$", label: "$ Dollar" },
   EUR: { symbol: "€", label: "€ Euro" },
 };

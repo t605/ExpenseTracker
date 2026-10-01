@@ -163,7 +163,9 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
   const setFolder = useCallback((destination: DestinationId, folder: string) => {
     setState((s) => ({
       ...s,
-      connections: s.connections.map((c) => (c.destination === destination ? { ...c, folder: folder.slice(0, 120) } : c)),
+      connections: s.connections.map((c) =>
+        c.destination === destination ? { ...c, folder: folder.slice(0, 120) } : c,
+      ),
     }));
   }, []);
 
@@ -190,7 +192,8 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
           : undefined;
         if (info.needsConnection && !connection) throw new Error(`${info.label} is not connected.`);
         const recipient = request.recipient.trim();
-        if (info.kind === "email" && !isValidEmail(recipient)) throw new Error("That email address does not look right.");
+        if (info.kind === "email" && !isValidEmail(recipient))
+          throw new Error("That email address does not look right.");
         const folder = request.folder.trim() || connection?.folder || info.defaultFolder;
         const sheetName = request.sheetName.trim() || report.title;
         detail =
@@ -289,7 +292,8 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
     async (schedule: Schedule, trigger: Trigger) => {
       const now = new Date();
       let entry: HistoryEntry;
-      const empty = buildReport(schedule.template, expensesRef.current, { now, currency: currencyRef.current }).recordCount === 0;
+      const empty =
+        buildReport(schedule.template, expensesRef.current, { now, currency: currencyRef.current }).recordCount === 0;
       if (empty) {
         // Nothing to send: say so in History instead of "delivering" an empty report.
         entry = skippedEntry(schedule, trigger, now, newId());
@@ -357,7 +361,8 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
           if (trigger === "catch-up") late += 1;
           else onTime += 1;
         }
-        if (late > 0) toast(`Caught up on ${late} scheduled export${late === 1 ? "" : "s"} that came due while the app was closed`);
+        if (late > 0)
+          toast(`Caught up on ${late} scheduled export${late === 1 ? "" : "s"} that came due while the app was closed`);
         else if (onTime > 0) toast(`Ran ${onTime} scheduled export${onTime === 1 ? "" : "s"}`);
       } finally {
         checkingRef.current = false;

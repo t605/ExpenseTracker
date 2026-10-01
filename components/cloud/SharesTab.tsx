@@ -47,7 +47,10 @@ export function SharesTab() {
   return (
     <div className="grid gap-6 lg:grid-cols-5">
       <section aria-labelledby="new-share" className="space-y-4 lg:col-span-2">
-        <form onSubmit={(e) => void create(e)} className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <form
+          onSubmit={(e) => void create(e)}
+          className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+        >
           <h2 id="new-share" className="text-sm font-semibold text-slate-900">
             Create a share link
           </h2>
@@ -55,7 +58,12 @@ export function SharesTab() {
             <label htmlFor="share-template" className={labelClass}>
               What to share
             </label>
-            <select id="share-template" value={template} onChange={(e) => setTemplate(e.target.value as TemplateId)} className={fieldClass}>
+            <select
+              id="share-template"
+              value={template}
+              onChange={(e) => setTemplate(e.target.value as TemplateId)}
+              className={fieldClass}
+            >
               {TEMPLATE_ORDER.map((t) => (
                 <option key={t} value={t}>
                   {TEMPLATES[t].label}
@@ -68,7 +76,14 @@ export function SharesTab() {
             <div className="grid grid-cols-4 gap-1 rounded-lg bg-slate-100 p-1" role="radiogroup">
               {EXPIRIES.map((e) => (
                 <label key={e} className="cursor-pointer">
-                  <input type="radio" name="expiry" value={e} checked={expiry === e} onChange={() => setExpiry(e)} className="peer sr-only" />
+                  <input
+                    type="radio"
+                    name="expiry"
+                    value={e}
+                    checked={expiry === e}
+                    onChange={() => setExpiry(e)}
+                    className="peer sr-only"
+                  />
                   <span className="block rounded-md px-1 py-1.5 text-center text-xs font-medium text-slate-600 peer-checked:bg-white peer-checked:text-indigo-700 peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-indigo-500">
                     {EXPIRY_LABELS[e]}
                   </span>
@@ -105,13 +120,15 @@ export function SharesTab() {
         <div className="rounded-xl bg-amber-50 p-3 text-xs leading-relaxed text-amber-900">
           <p className="font-semibold">Before you share</p>
           <ul className="mt-1 list-disc space-y-1 pl-4">
-            <li>The numbers travel inside the link itself. There is no server, so anyone who gets the link can read them.</li>
+            <li>
+              The numbers travel inside the link itself. There is no server, so anyone who gets the link can read them.
+            </li>
             <li>A link cannot be recalled once sent. &ldquo;Revoke&rdquo; only blocks it on this browser.</li>
             <li>The expiry is checked by the page that opens the link, so treat it as a courtesy, not as security.</li>
             {local && (
               <li className="font-medium">
-                This app is running on this computer, so the link only opens here. It would work for others once the app is hosted
-                somewhere.
+                This app is running on this computer, so the link only opens here. It would work for others once the app
+                is hosted somewhere.
               </li>
             )}
           </ul>
@@ -145,13 +162,17 @@ export function SharesTab() {
                     )}
                   </div>
                   <p className="mt-0.5 text-xs text-slate-500">
-                    Created {formatDateTime(s.createdAt)} &middot; {s.records} expense{s.records === 1 ? "" : "s"} &middot;{" "}
-                    {s.expiresAt ? `expires ${formatDateTime(s.expiresAt)}` : "never expires"}
+                    Created {formatDateTime(s.createdAt)} &middot; {s.records} expense{s.records === 1 ? "" : "s"}{" "}
+                    &middot; {s.expiresAt ? `expires ${formatDateTime(s.expiresAt)}` : "never expires"}
                     {s.allowDownload ? "" : " · view only"}
                   </p>
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     {s.url ? (
-                      <button type="button" onClick={() => setShown({ url: s.url, record: s })} className={secondaryButton}>
+                      <button
+                        type="button"
+                        onClick={() => setShown({ url: s.url, record: s })}
+                        className={secondaryButton}
+                      >
                         Show link and QR
                       </button>
                     ) : (
@@ -167,7 +188,11 @@ export function SharesTab() {
                         Revoke (this browser)
                       </button>
                     )}
-                    <button type="button" onClick={() => removeShare(s.id)} className="ml-auto text-xs font-medium text-red-600 hover:underline">
+                    <button
+                      type="button"
+                      onClick={() => removeShare(s.id)}
+                      className="ml-auto text-xs font-medium text-red-600 hover:underline"
+                    >
                       Remove from list
                     </button>
                   </div>
@@ -192,7 +217,13 @@ function ShareResult({ shown }: { shown: Shown }) {
           <label htmlFor="share-url" className={labelClass}>
             Link ({url.length.toLocaleString("en-US")} characters)
           </label>
-          <input id="share-url" readOnly value={url} onFocus={(e) => e.currentTarget.select()} className={`${fieldClass} font-mono text-xs`} />
+          <input
+            id="share-url"
+            readOnly
+            value={url}
+            onFocus={(e) => e.currentTarget.select()}
+            className={`${fieldClass} font-mono text-xs`}
+          />
           <div className="flex flex-wrap gap-2">
             <CopyButton text={url} label="Copy link" />
             <a href={url} target="_blank" rel="noopener noreferrer" className={secondaryButton}>

@@ -29,7 +29,9 @@ export function HistoryTab({ onRetry }: { onRetry: (entry: HistoryEntry) => void
     return (
       <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
         <p className="text-sm font-medium text-slate-800">No exports yet</p>
-        <p className="mt-1 text-sm text-slate-600">Every export, scheduled run and failure will be listed here with its time.</p>
+        <p className="mt-1 text-sm text-slate-600">
+          Every export, scheduled run and failure will be listed here with its time.
+        </p>
       </div>
     );
   }
@@ -46,7 +48,11 @@ export function HistoryTab({ onRetry }: { onRetry: (entry: HistoryEntry) => void
               onClick={() => setFilter(f)}
               className={`rounded-md px-3 py-1.5 text-xs font-medium ${filter === f ? "bg-white text-indigo-700 shadow-sm" : "text-slate-600"}`}
             >
-              {f === "all" ? `All (${all.length})` : f === "success" ? `Succeeded (${successCount})` : `Failed (${failedCount})`}
+              {f === "all"
+                ? `All (${all.length})`
+                : f === "success"
+                  ? `Succeeded (${successCount})`
+                  : `Failed (${failedCount})`}
             </button>
           ))}
         </div>
@@ -68,7 +74,11 @@ export function HistoryTab({ onRetry }: { onRetry: (entry: HistoryEntry) => void
             </button>
           </span>
         ) : (
-          <button type="button" onClick={() => setConfirmClear(true)} className="text-xs font-medium text-red-600 hover:underline">
+          <button
+            type="button"
+            onClick={() => setConfirmClear(true)}
+            className="text-xs font-medium text-red-600 hover:underline"
+          >
             Clear history
           </button>
         )}
@@ -96,7 +106,9 @@ export function HistoryTab({ onRetry }: { onRetry: (entry: HistoryEntry) => void
                     ) : (
                       <StatusPill tone="red">Failed</StatusPill>
                     )}
-                    <StatusPill tone={h.trigger === "manual" ? "slate" : "indigo"}>{TRIGGER_LABELS[h.trigger]}</StatusPill>
+                    <StatusPill tone={h.trigger === "manual" ? "slate" : "indigo"}>
+                      {TRIGGER_LABELS[h.trigger]}
+                    </StatusPill>
                   </div>
                   <p className="mt-0.5 text-xs text-slate-500">
                     <time dateTime={h.at}>{formatDateTime(h.at)}</time> ({timeAgo(h.at)})
@@ -117,7 +129,11 @@ export function HistoryTab({ onRetry }: { onRetry: (entry: HistoryEntry) => void
                 {h.fingerprint && (
                   <span className="inline-flex items-center gap-1 text-xs text-slate-500">
                     SHA-256 <code className="rounded bg-slate-100 px-1">{h.fingerprint.slice(0, 12)}</code>
-                    <CopyButton text={h.fingerprint} label="Copy" className="rounded-md px-1.5 py-0.5 text-xs font-medium text-indigo-600 hover:underline" />
+                    <CopyButton
+                      text={h.fingerprint}
+                      label="Copy"
+                      className="rounded-md px-1.5 py-0.5 text-xs font-medium text-indigo-600 hover:underline"
+                    />
                   </span>
                 )}
                 {h.status === "failed" && (
@@ -131,8 +147,8 @@ export function HistoryTab({ onRetry }: { onRetry: (entry: HistoryEntry) => void
         </ol>
       )}
       <p className="text-xs text-slate-500">
-        The fingerprint is a SHA-256 of the exported file. If a file is ever questioned, its fingerprint shows whether it was
-        changed after export. History keeps the latest 100 entries on this browser.
+        The fingerprint is a SHA-256 of the exported file. If a file is ever questioned, its fingerprint shows whether
+        it was changed after export. History keeps the latest 100 entries on this browser.
       </p>
     </div>
   );

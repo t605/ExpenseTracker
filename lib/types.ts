@@ -1,11 +1,4 @@
-export const CATEGORIES = [
-  "Food",
-  "Transportation",
-  "Entertainment",
-  "Shopping",
-  "Bills",
-  "Other",
-] as const;
+export const CATEGORIES = ["Food", "Transportation", "Entertainment", "Shopping", "Bills", "Other"] as const;
 
 export type Category = (typeof CATEGORIES)[number];
 

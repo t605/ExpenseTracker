@@ -156,10 +156,30 @@ function categoryReport(expenses: Expense[], ctx: ReportContext, stamp: string):
     title: "Category analysis",
     subtitle: `${groups.length} categor${groups.length === 1 ? "y" : "ies"}, biggest first`,
     fileBase: `category-analysis-${stamp}`,
-    columns: ["Category", "Expenses", `Total (${cur})`, "Share (%)", `Average (${cur})`, `Smallest (${cur})`, `Largest (${cur})`, "First", "Last"],
+    columns: [
+      "Category",
+      "Expenses",
+      `Total (${cur})`,
+      "Share (%)",
+      `Average (${cur})`,
+      `Smallest (${cur})`,
+      `Largest (${cur})`,
+      "First",
+      "Last",
+    ],
     rows,
     footer: expenses.length
-      ? ["All categories", String(expenses.length), centsToInputValue(total), "100.0", centsToInputValue(Math.round(total / expenses.length)), "", "", "", ""]
+      ? [
+          "All categories",
+          String(expenses.length),
+          centsToInputValue(total),
+          "100.0",
+          centsToInputValue(Math.round(total / expenses.length)),
+          "",
+          "",
+          "",
+          "",
+        ]
       : null,
     recordCount: expenses.length,
   };

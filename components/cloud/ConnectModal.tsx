@@ -9,8 +9,16 @@ import { useCloud } from "./CloudProvider";
 import { ServiceBadge, Spinner, primaryButton, secondaryButton } from "./ui";
 
 const PERMISSIONS: Record<string, string[]> = {
-  sheets: ["Create spreadsheets in your account", "Write rows into spreadsheets it created", "Nothing else: it cannot read your other files"],
-  storage: ["Create files in one folder", "Update files it created before", "Nothing else: it cannot read your other files"],
+  sheets: [
+    "Create spreadsheets in your account",
+    "Write rows into spreadsheets it created",
+    "Nothing else: it cannot read your other files",
+  ],
+  storage: [
+    "Create files in one folder",
+    "Update files it created before",
+    "Nothing else: it cannot read your other files",
+  ],
 };
 
 /**

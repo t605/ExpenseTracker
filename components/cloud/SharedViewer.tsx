@@ -47,20 +47,38 @@ export function SharedViewer() {
 
   if (!result.ok) {
     if (result.reason === "empty") {
-      return <Notice title="Shared report">This page shows a report that someone shared from Expense Tracker. Open a share link to see it here.</Notice>;
+      return (
+        <Notice title="Shared report">
+          This page shows a report that someone shared from Expense Tracker. Open a share link to see it here.
+        </Notice>
+      );
     }
     if (result.reason === "too-large") {
-      return <Notice title="Report too large">This link holds more data than can be shown safely, so it was not opened.</Notice>;
+      return (
+        <Notice title="Report too large">
+          This link holds more data than can be shown safely, so it was not opened.
+        </Notice>
+      );
     }
-    return <Notice title="This link does not work">It looks damaged or cut off. Ask the sender for a new link, and make sure the whole link was copied.</Notice>;
+    return (
+      <Notice title="This link does not work">
+        It looks damaged or cut off. Ask the sender for a new link, and make sure the whole link was copied.
+      </Notice>
+    );
   }
 
   const p = result.payload;
   if (isExpired(p.exp, new Date())) {
-    return <Notice title="This link has expired">It was valid until {formatDateTime(p.exp as string)}. Ask the sender for a new one.</Notice>;
+    return (
+      <Notice title="This link has expired">
+        It was valid until {formatDateTime(p.exp as string)}. Ask the sender for a new one.
+      </Notice>
+    );
   }
   if (state.shares.some((s) => s.id === p.id && s.revoked)) {
-    return <Notice title="This link was revoked">The sender revoked it on this browser, so the report is not shown.</Notice>;
+    return (
+      <Notice title="This link was revoked">The sender revoked it on this browser, so the report is not shown.</Notice>
+    );
   }
 
   return (
@@ -68,14 +86,20 @@ export function SharedViewer() {
       <div>
         <p className="text-xs font-medium uppercase tracking-wide text-indigo-600">Shared report</p>
         <h1 className="text-2xl font-bold tracking-tight">{p.title}</h1>
-        <p className="mt-1 text-sm text-slate-600">{p.subtitle} &middot; amounts in {p.currency}</p>
+        <p className="mt-1 text-sm text-slate-600">
+          {p.subtitle} &middot; amounts in {p.currency}
+        </p>
       </div>
 
       <ReportTable columns={p.columns} rows={p.rows} footer={p.footer} caption={p.title} />
 
       <div className="flex flex-wrap items-center gap-3">
         {p.dl && (
-          <button type="button" onClick={() => downloadCSV(`${p.fileBase}.csv`, tableToCSV(p))} className={primaryButton}>
+          <button
+            type="button"
+            onClick={() => downloadCSV(`${p.fileBase}.csv`, tableToCSV(p))}
+            className={primaryButton}
+          >
             Download CSV
           </button>
         )}

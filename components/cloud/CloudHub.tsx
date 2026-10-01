@@ -48,7 +48,11 @@ export function CloudHub() {
         </p>
       )}
 
-      <div role="tablist" aria-label="Export and share sections" className="flex gap-1 overflow-x-auto rounded-xl bg-slate-200/60 p-1">
+      <div
+        role="tablist"
+        aria-label="Export and share sections"
+        className="flex gap-1 overflow-x-auto rounded-xl bg-slate-200/60 p-1"
+      >
         {tabs.map((t) => (
           <button
             key={t.id}

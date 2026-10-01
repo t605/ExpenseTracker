@@ -20,8 +20,7 @@ export function filterExpenses(expenses: Expense[], f: ExpenseFilters): Expense[
 
 export function sortExpenses(expenses: Expense[], sort: SortKey): Expense[] {
   const copy = [...expenses];
-  const byNewest = (a: Expense, b: Expense) =>
-    b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt);
+  const byNewest = (a: Expense, b: Expense) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt);
   switch (sort) {
     case "oldest":
       return copy.sort((a, b) => -byNewest(a, b));

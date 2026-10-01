@@ -21,7 +21,13 @@ function expenses(count: number, description = "x"): Expense[] {
 
 function payloadFor(count: number, description = "x") {
   const report = buildReport("full", expenses(count, description), { now: NOW, currency: "USD" });
-  return createSharePayload(report, { id: "abc", now: NOW, expiresAt: expiryFrom("7d", NOW), allowDownload: true, currency: "USD" });
+  return createSharePayload(report, {
+    id: "abc",
+    now: NOW,
+    expiresAt: expiryFrom("7d", NOW),
+    allowDownload: true,
+    currency: "USD",
+  });
 }
 
 describe("checkShareable: a link is only made if the viewer will open it", () => {
@@ -102,14 +108,20 @@ describe("saved state: hostile or damaged values", () => {
       lastRunAt: null,
     };
     expect(sanitizeCloudState({ schedules: [schedule] }).schedules).toHaveLength(0);
-    expect(sanitizeCloudState({ schedules: [{ ...schedule, template: "tax", destination: "toString" }] }).schedules).toHaveLength(0);
     expect(
-      sanitizeCloudState({ shares: [{ id: "x", createdAt: "2026-10-01T10:00:00.000Z", expiresAt: null, template: "toString", url: "" }] }).shares,
+      sanitizeCloudState({ schedules: [{ ...schedule, template: "tax", destination: "toString" }] }).schedules,
+    ).toHaveLength(0);
+    expect(
+      sanitizeCloudState({
+        shares: [{ id: "x", createdAt: "2026-10-01T10:00:00.000Z", expiresAt: null, template: "toString", url: "" }],
+      }).shares,
     ).toHaveLength(0);
   });
 
   it("only keeps an http(s) share link of sane length", () => {
-    expect(safeShareUrl("https://t605.github.io/ExpenseTracker/shared#abc")).toBe("https://t605.github.io/ExpenseTracker/shared#abc");
+    expect(safeShareUrl("https://t605.github.io/ExpenseTracker/shared#abc")).toBe(
+      "https://t605.github.io/ExpenseTracker/shared#abc",
+    );
     expect(safeShareUrl("http://localhost:3000/shared#abc")).toBe("http://localhost:3000/shared#abc");
     expect(safeShareUrl("javascript:alert(1)")).toBe("");
     expect(safeShareUrl("JAVASCRIPT:alert(1)")).toBe("");
@@ -121,7 +133,13 @@ describe("saved state: hostile or damaged values", () => {
   });
 
   it("a saved share with a javascript: link comes back without the link", () => {
-    const share = { id: "x", createdAt: "2026-10-01T10:00:00.000Z", expiresAt: null, template: "full", url: "javascript:alert(1)" };
+    const share = {
+      id: "x",
+      createdAt: "2026-10-01T10:00:00.000Z",
+      expiresAt: null,
+      template: "full",
+      url: "javascript:alert(1)",
+    };
     expect(sanitizeCloudState({ shares: [share] }).shares[0].url).toBe("");
   });
 });

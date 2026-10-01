@@ -26,7 +26,11 @@ export function SummaryCards({ expenses, now }: { expenses: Expense[]; now: Date
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <StatCard label="Total spending" value={formatMoney(total)} hint={`${expenses.length} expense${expenses.length === 1 ? "" : "s"}`} />
+      <StatCard
+        label="Total spending"
+        value={formatMoney(total)}
+        hint={`${expenses.length} expense${expenses.length === 1 ? "" : "s"}`}
+      />
       <StatCard
         label={`Spent in ${monthLabel(key, true)}`}
         value={formatMoney(thisMonth)}
@@ -48,7 +52,9 @@ export function SummaryCards({ expenses, now }: { expenses: Expense[]; now: Date
       <StatCard
         label="Top category"
         value={top ? top.category : "-"}
-        hint={top ? `${formatMoney(top.cents)} (${Math.round(top.share * 100)}% of spending)` : "Add an expense to see this"}
+        hint={
+          top ? `${formatMoney(top.cents)} (${Math.round(top.share * 100)}% of spending)` : "Add an expense to see this"
+        }
       />
     </div>
   );

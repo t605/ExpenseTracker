@@ -23,7 +23,8 @@ export function SyncStatusBar() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Export &amp; Share</h1>
           <p className="mt-1 text-sm text-indigo-100">
-            Send reports to your accountant, keep copies in the cloud, share a link. All demo: nothing leaves this device.
+            Send reports to your accountant, keep copies in the cloud, share a link. All demo: nothing leaves this
+            device.
           </p>
         </div>
         <div role="status" aria-live="polite" className="text-right">
@@ -81,7 +82,11 @@ export function SyncStatusBar() {
             <>
               <span className="flex -space-x-1.5">
                 {state.connections.map((c) => (
-                  <span key={c.destination} title={DESTINATIONS[c.destination].label} className="rounded-xl ring-2 ring-indigo-600">
+                  <span
+                    key={c.destination}
+                    title={DESTINATIONS[c.destination].label}
+                    className="rounded-xl ring-2 ring-indigo-600"
+                  >
                     <ServiceBadge destination={c.destination} size="sm" />
                   </span>
                 ))}

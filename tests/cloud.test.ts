@@ -81,7 +81,17 @@ describe("templates", () => {
   it("category analysis: biggest first, shares, range of dates", () => {
     const r = buildReport("category", data, ctx);
     expect(r.rows.map((row) => row[0])).toEqual(["Food", "Bills", "Other"]);
-    expect(r.rows[0]).toEqual(["Food", "2", "2023.00", "82.8", "1011.50", "523.00", "1500.00", "2026-10-01", "2026-10-01"]);
+    expect(r.rows[0]).toEqual([
+      "Food",
+      "2",
+      "2023.00",
+      "82.8",
+      "1011.50",
+      "523.00",
+      "1500.00",
+      "2026-10-01",
+      "2026-10-01",
+    ]);
     expect(r.rows[1][7]).toBe("2026-09-15");
     expect(r.rows[1][8]).toBe("2026-10-05");
   });
@@ -97,7 +107,9 @@ describe("templates", () => {
 
   it("CSV quotes cells and guards against formulas", () => {
     const csv = reportToCSV(buildReport("full", [exp({ description: '=1+1, "x"' })], ctx));
-    expect(csv).toBe("Date,Category,Amount (ILS),Description\r\n2026-10-01,Food,10.00,\"'=1+1, \"\"x\"\"\"\r\nTotal,,10.00,\r\n");
+    expect(csv).toBe(
+      'Date,Category,Amount (ILS),Description\r\n2026-10-01,Food,10.00,"\'=1+1, ""x"""\r\nTotal,,10.00,\r\n',
+    );
   });
 
   it("does not change the input", () => {
@@ -162,9 +174,15 @@ describe("schedule timing", () => {
   it("describes timing in words", () => {
     expect(describeTiming({ frequency: "daily", hour: 8, weekday: 0, dayOfMonth: 1 })).toBe("Every day at 08:00");
     expect(describeTiming({ frequency: "weekly", hour: 17, weekday: 5, dayOfMonth: 1 })).toBe("Every Friday at 17:00");
-    expect(describeTiming({ frequency: "monthly", hour: 9, weekday: 0, dayOfMonth: 1 })).toBe("Monthly on the 1st at 09:00");
-    expect(describeTiming({ frequency: "monthly", hour: 9, weekday: 0, dayOfMonth: 22 })).toBe("Monthly on the 22nd at 09:00");
-    expect(describeTiming({ frequency: "monthly", hour: 9, weekday: 0, dayOfMonth: 11 })).toBe("Monthly on the 11th at 09:00");
+    expect(describeTiming({ frequency: "monthly", hour: 9, weekday: 0, dayOfMonth: 1 })).toBe(
+      "Monthly on the 1st at 09:00",
+    );
+    expect(describeTiming({ frequency: "monthly", hour: 9, weekday: 0, dayOfMonth: 22 })).toBe(
+      "Monthly on the 22nd at 09:00",
+    );
+    expect(describeTiming({ frequency: "monthly", hour: 9, weekday: 0, dayOfMonth: 11 })).toBe(
+      "Monthly on the 11th at 09:00",
+    );
   });
 
   it("labels the wait", () => {
@@ -207,7 +225,12 @@ describe("delivery simulation", () => {
   it("walks every step, in order, without real waiting", async () => {
     const seen: number[] = [];
     const waits: number[] = [];
-    await simulateDelivery(deliverySteps("dropbox", dctx), null, (i) => seen.push(i), async (ms) => void waits.push(ms));
+    await simulateDelivery(
+      deliverySteps("dropbox", dctx),
+      null,
+      (i) => seen.push(i),
+      async (ms) => void waits.push(ms),
+    );
     expect(seen).toEqual([0, 1, 2, 3]);
     expect(waits).toHaveLength(4);
   });
@@ -215,7 +238,12 @@ describe("delivery simulation", () => {
   it("fails part-way when a failure is set", async () => {
     const seen: number[] = [];
     await expect(
-      simulateDelivery(deliverySteps("email", dctx), "bounced", (i) => seen.push(i), async () => {}),
+      simulateDelivery(
+        deliverySteps("email", dctx),
+        "bounced",
+        (i) => seen.push(i),
+        async () => {},
+      ),
     ).rejects.toThrow("bounced");
     expect(seen).toEqual([0, 1, 2]);
   });
@@ -275,7 +303,10 @@ describe("share links", () => {
     // 3 MB of zeros compresses to a few KB, so the link is tiny but inflates far above the 1 MB limit.
     const bomb = new Blob([new Uint8Array(3_000_000)]).stream().pipeThrough(new CompressionStream("deflate-raw"));
     const bytes = new Uint8Array(await new Response(bomb).arrayBuffer());
-    const link = btoa(String.fromCharCode.apply(null, Array.from(bytes))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    const link = btoa(String.fromCharCode.apply(null, Array.from(bytes)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
     expect(link.length).toBeLessThan(10_000);
     expect(await decodeShare(link)).toEqual({ ok: false, reason: "too-large" });
   });
@@ -295,7 +326,9 @@ describe("share links", () => {
 
   it("builds the link and spots local addresses", () => {
     expect(buildShareUrl("https://app.example", "abc")).toBe("https://app.example/shared#abc");
-    expect(buildShareUrl("https://t605.github.io", "abc", "/ExpenseTracker")).toBe("https://t605.github.io/ExpenseTracker/shared#abc");
+    expect(buildShareUrl("https://t605.github.io", "abc", "/ExpenseTracker")).toBe(
+      "https://t605.github.io/ExpenseTracker/shared#abc",
+    );
     expect(isLocalOrigin("http://localhost:3123")).toBe(true);
     expect(isLocalOrigin("http://127.0.0.1:3000")).toBe(true);
     expect(isLocalOrigin("https://app.example")).toBe(false);

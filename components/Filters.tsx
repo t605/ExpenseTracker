@@ -15,7 +15,8 @@ const control =
 const label = "block text-xs font-medium text-slate-600";
 
 export function Filters({ filters, onChange, sort, onSortChange }: FiltersProps) {
-  const set = <K extends keyof ExpenseFilters>(key: K, value: ExpenseFilters[K]) => onChange({ ...filters, [key]: value });
+  const set = <K extends keyof ExpenseFilters>(key: K, value: ExpenseFilters[K]) =>
+    onChange({ ...filters, [key]: value });
   const rangeInvalid = Boolean(filters.from && filters.to && filters.from > filters.to);
 
   return (
@@ -56,13 +57,25 @@ export function Filters({ filters, onChange, sort, onSortChange }: FiltersProps)
           <label htmlFor="from" className={label}>
             From
           </label>
-          <input id="from" type="date" value={filters.from} onChange={(e) => set("from", e.target.value)} className={control} />
+          <input
+            id="from"
+            type="date"
+            value={filters.from}
+            onChange={(e) => set("from", e.target.value)}
+            className={control}
+          />
         </div>
         <div>
           <label htmlFor="to" className={label}>
             To
           </label>
-          <input id="to" type="date" value={filters.to} onChange={(e) => set("to", e.target.value)} className={control} />
+          <input
+            id="to"
+            type="date"
+            value={filters.to}
+            onChange={(e) => set("to", e.target.value)}
+            className={control}
+          />
         </div>
         <div>
           <label htmlFor="sort" className={label}>

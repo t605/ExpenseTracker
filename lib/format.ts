@@ -23,8 +23,18 @@ export function parseISODate(iso: string): { year: number; month: number; day: n
 }
 
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 /** "2026-10-01" -> "1 Oct 2026". Fixed month names, so every browser prints the same text. */

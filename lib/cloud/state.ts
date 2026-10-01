@@ -34,8 +34,14 @@ const int = (v: unknown, min: number, max: number): number | null =>
 function toConnection(raw: unknown): Connection | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as Record<string, unknown>;
-  if (!isDestination(r.destination) || !DESTINATIONS[r.destination].needsConnection || !isIso(r.connectedAt)) return null;
-  return { destination: r.destination, account: str(r.account, 100), connectedAt: r.connectedAt, folder: str(r.folder, 120) };
+  if (!isDestination(r.destination) || !DESTINATIONS[r.destination].needsConnection || !isIso(r.connectedAt))
+    return null;
+  return {
+    destination: r.destination,
+    account: str(r.account, 100),
+    connectedAt: r.connectedAt,
+    folder: str(r.folder, 120),
+  };
 }
 
 function toSchedule(raw: unknown): Schedule | null {

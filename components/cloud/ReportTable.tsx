@@ -26,7 +26,11 @@ export function ReportTable({ columns, rows, footer, limit, caption }: ReportTab
           <thead className="bg-slate-50 text-xs text-slate-600">
             <tr>
               {columns.map((c, i) => (
-                <th key={c} scope="col" className={`whitespace-nowrap px-3 py-2 font-medium ${numeric[i] ? "text-right" : ""}`}>
+                <th
+                  key={c}
+                  scope="col"
+                  className={`whitespace-nowrap px-3 py-2 font-medium ${numeric[i] ? "text-right" : ""}`}
+                >
                   {c}
                 </th>
               ))}

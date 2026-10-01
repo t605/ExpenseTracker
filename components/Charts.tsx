@@ -42,7 +42,11 @@ export function CategoryChart({ expenses }: { expenses: Expense[] }) {
         {data.map((d) => (
           <li key={d.category} className="flex items-center justify-between gap-3">
             <span className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-sm" style={{ background: CATEGORY_STYLES[d.category].hex }} aria-hidden="true" />
+              <span
+                className="h-3 w-3 rounded-sm"
+                style={{ background: CATEGORY_STYLES[d.category].hex }}
+                aria-hidden="true"
+              />
               {d.category}
             </span>
             <span className="text-slate-600">

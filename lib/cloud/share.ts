@@ -79,13 +79,15 @@ export function validatePayload(raw: unknown): SharePayload | null {
   if (!raw || typeof raw !== "object") return null;
   const p = raw as Record<string, unknown>;
   if (p.v !== 1 || typeof p.id !== "string" || typeof p.created !== "string") return null;
-  if (typeof p.title !== "string" || p.title.length > 100 || typeof p.subtitle !== "string" || p.subtitle.length > 200) return null;
+  if (typeof p.title !== "string" || p.title.length > 100 || typeof p.subtitle !== "string" || p.subtitle.length > 200)
+    return null;
   if (typeof p.fileBase !== "string" || p.fileBase.length > 100) return null;
   if (p.exp !== null && (typeof p.exp !== "string" || Number.isNaN(new Date(p.exp).getTime()))) return null;
   if (!isCurrency(p.currency) || typeof p.dl !== "boolean") return null;
   if (!isStringArray(p.columns) || p.columns.length < 1 || p.columns.length > MAX_COLUMNS) return null;
   const width = p.columns.length;
-  if (!Array.isArray(p.rows) || p.rows.length > MAX_ROWS || !p.rows.every((row) => isStringArray(row, width))) return null;
+  if (!Array.isArray(p.rows) || p.rows.length > MAX_ROWS || !p.rows.every((row) => isStringArray(row, width)))
+    return null;
   if (p.footer !== null && !isStringArray(p.footer, width)) return null;
   return {
     v: 1,
@@ -166,19 +168,26 @@ async function readAll(stream: ReadableStream<Uint8Array>, limit: number): Promi
 
 export async function encodeShare(payload: SharePayload): Promise<string> {
   const bytes = new TextEncoder().encode(JSON.stringify(payload));
-  const compressed = await readAll(new Blob([bytes as BlobPart]).stream().pipeThrough(new CompressionStream("deflate-raw")), MAX_DECODED_BYTES);
+  const compressed = await readAll(
+    new Blob([bytes as BlobPart]).stream().pipeThrough(new CompressionStream("deflate-raw")),
+    MAX_DECODED_BYTES,
+  );
   if (!compressed) throw new Error("report too large to share");
   return toBase64Url(compressed);
 }
 
-export type DecodeResult = { ok: true; payload: SharePayload } | { ok: false; reason: "empty" | "invalid" | "too-large" };
+export type DecodeResult =
+  { ok: true; payload: SharePayload } | { ok: false; reason: "empty" | "invalid" | "too-large" };
 
 export async function decodeShare(fragment: string): Promise<DecodeResult> {
   const data = fragment.replace(/^#/, "").trim();
   if (!data) return { ok: false, reason: "empty" };
   try {
     const compressed = fromBase64Url(data);
-    const inflated = await readAll(new Blob([compressed as BlobPart]).stream().pipeThrough(new DecompressionStream("deflate-raw")), MAX_DECODED_BYTES);
+    const inflated = await readAll(
+      new Blob([compressed as BlobPart]).stream().pipeThrough(new DecompressionStream("deflate-raw")),
+      MAX_DECODED_BYTES,
+    );
     if (!inflated) return { ok: false, reason: "too-large" };
     const payload = validatePayload(JSON.parse(new TextDecoder().decode(inflated)));
     return payload ? { ok: true, payload } : { ok: false, reason: "invalid" };

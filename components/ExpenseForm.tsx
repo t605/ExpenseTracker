@@ -64,7 +64,13 @@ export function ExpenseForm({ initial, onSubmit, onCancel }: ExpenseFormProps) {
           <label htmlFor="date" className="block text-sm font-medium text-slate-700">
             Date
           </label>
-          <input id="date" type="date" value={values.date} onChange={(e) => set("date", e.target.value)} {...field("date")} />
+          <input
+            id="date"
+            type="date"
+            value={values.date}
+            onChange={(e) => set("date", e.target.value)}
+            {...field("date")}
+          />
           {error("date")}
         </div>
         <div>
@@ -88,7 +94,12 @@ export function ExpenseForm({ initial, onSubmit, onCancel }: ExpenseFormProps) {
         <label htmlFor="category" className="block text-sm font-medium text-slate-700">
           Category
         </label>
-        <select id="category" value={values.category} onChange={(e) => set("category", e.target.value)} {...field("category")}>
+        <select
+          id="category"
+          value={values.category}
+          onChange={(e) => set("category", e.target.value)}
+          {...field("category")}
+        >
           <option value="">Choose a category...</option>
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>

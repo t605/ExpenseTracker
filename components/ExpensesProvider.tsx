@@ -30,9 +30,7 @@ export function ExpensesProvider({ children }: { children: React.ReactNode }) {
       setExpenses(loadExpenses());
       readOk.current = true;
     } catch {
-      setStorageError(
-        "Your saved expenses could not be read. New expenses will not be saved until this is fixed.",
-      );
+      setStorageError("Your saved expenses could not be read. New expenses will not be saved until this is fixed.");
     }
     setLoaded(true);
   }, []);

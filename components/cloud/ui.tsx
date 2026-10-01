@@ -14,10 +14,23 @@ const TONES: Record<Tone, { pill: string; dot: string }> = {
   indigo: { pill: "bg-indigo-50 text-indigo-700 ring-indigo-200", dot: "bg-indigo-500" },
 };
 
-export function StatusPill({ tone, children, pulse = false }: { tone: Tone; children: React.ReactNode; pulse?: boolean }) {
+export function StatusPill({
+  tone,
+  children,
+  pulse = false,
+}: {
+  tone: Tone;
+  children: React.ReactNode;
+  pulse?: boolean;
+}) {
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${TONES[tone].pill}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${TONES[tone].dot} ${pulse ? "animate-pulse" : ""}`} aria-hidden="true" />
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${TONES[tone].pill}`}
+    >
+      <span
+        className={`h-1.5 w-1.5 rounded-full ${TONES[tone].dot} ${pulse ? "animate-pulse" : ""}`}
+        aria-hidden="true"
+      />
       {children}
     </span>
   );
@@ -27,13 +40,24 @@ export function ServiceBadge({ destination, size = "md" }: { destination: Destin
   const info = DESTINATIONS[destination];
   const box = size === "lg" ? "h-11 w-11 text-lg" : size === "sm" ? "h-7 w-7 text-xs" : "h-9 w-9 text-sm";
   return (
-    <span className={`flex shrink-0 items-center justify-center rounded-xl font-bold ${box} ${info.badge}`} aria-hidden="true">
+    <span
+      className={`flex shrink-0 items-center justify-center rounded-xl font-bold ${box} ${info.badge}`}
+      aria-hidden="true"
+    >
       {info.initial}
     </span>
   );
 }
 
-export function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (next: boolean) => void; label: string }) {
+export function Toggle({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+  label: string;
+}) {
   return (
     <button
       type="button"
@@ -70,7 +94,15 @@ export function Spinner({ className = "h-4 w-4" }: { className?: string }) {
 }
 
 /** Copies text and shows "Copied" for a moment. Falls back to a text prompt when the clipboard is blocked. */
-export function CopyButton({ text, label = "Copy", className = secondaryButton }: { text: string; label?: string; className?: string }) {
+export function CopyButton({
+  text,
+  label = "Copy",
+  className = secondaryButton,
+}: {
+  text: string;
+  label?: string;
+  className?: string;
+}) {
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
   async function copy() {
     try {

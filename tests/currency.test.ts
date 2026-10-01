@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { CURRENCIES, CURRENCY_STORAGE_KEY, DEFAULT_CURRENCY, isCurrency, loadCurrency, saveCurrency } from "@/lib/currency";
+import {
+  CURRENCIES,
+  CURRENCY_STORAGE_KEY,
+  DEFAULT_CURRENCY,
+  isCurrency,
+  loadCurrency,
+  saveCurrency,
+} from "@/lib/currency";
 import { formatCurrency } from "@/lib/format";
 
 describe("formatCurrency", () => {

@@ -31,7 +31,11 @@ export function ConnectionsTab({ onConnect }: { onConnect: (destination: Destina
           const usedBy = state.schedules.filter((s) => s.destination === id && s.enabled).length;
 
           return (
-            <section key={id} aria-label={info.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+            <section
+              key={id}
+              aria-label={info.label}
+              className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+            >
               <div className="flex items-start gap-3">
                 <ServiceBadge destination={id} size="lg" />
                 <div className="min-w-0 flex-1">
@@ -60,16 +64,16 @@ export function ConnectionsTab({ onConnect }: { onConnect: (destination: Destina
                     <dd className="text-slate-800">{formatDateTime(connection.connectedAt)}</dd>
                     <dt className="text-slate-500">Last sync</dt>
                     <dd className="text-slate-800">
-                      {lastEntry ? `${timeAgo(lastEntry.at)}${lastEntry.status === "failed" ? " (failed)" : ""}` : "None yet"}
+                      {lastEntry
+                        ? `${timeAgo(lastEntry.at)}${lastEntry.status === "failed" ? " (failed)" : ""}`
+                        : "None yet"}
                     </dd>
                     <dt className="text-slate-500">Uploaded</dt>
                     <dd className="text-slate-800">
                       {okEntries.length} file{okEntries.length === 1 ? "" : "s"}, {formatBytes(usedBytes)}
                     </dd>
                     <dt className="text-slate-500">Schedules</dt>
-                    <dd className="text-slate-800">
-                      {usedBy} active
-                    </dd>
+                    <dd className="text-slate-800">{usedBy} active</dd>
                   </dl>
                   <div>
                     <label htmlFor={`folder-${id}`} className={labelClass}>
@@ -86,9 +90,7 @@ export function ConnectionsTab({ onConnect }: { onConnect: (destination: Destina
                   </div>
                   {confirming === id ? (
                     <div className="flex flex-wrap items-center gap-2 rounded-lg bg-red-50 p-2 text-xs text-red-800">
-                      <span className="flex-1">
-                        Disconnect {info.label}? Schedules that use it will be paused.
-                      </span>
+                      <span className="flex-1">Disconnect {info.label}? Schedules that use it will be paused.</span>
                       <button
                         type="button"
                         onClick={() => {
@@ -104,7 +106,11 @@ export function ConnectionsTab({ onConnect }: { onConnect: (destination: Destina
                       </button>
                     </div>
                   ) : (
-                    <button type="button" onClick={() => setConfirming(id)} className="text-xs font-medium text-red-600 hover:underline">
+                    <button
+                      type="button"
+                      onClick={() => setConfirming(id)}
+                      className="text-xs font-medium text-red-600 hover:underline"
+                    >
                       Disconnect
                     </button>
                   )}

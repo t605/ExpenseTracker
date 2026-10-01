@@ -23,8 +23,8 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-md rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
         <h1 className="text-xl font-semibold">Welcome to Expense Tracker</h1>
         <p className="mt-2 text-sm text-slate-600">
-          You have not added any expenses yet. Add your first one and this page will show where your money goes.
-          Your data stays in this browser only.
+          You have not added any expenses yet. Add your first one and this page will show where your money goes. Your
+          data stays in this browser only.
         </p>
         <button
           type="button"

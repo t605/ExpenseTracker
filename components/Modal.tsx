@@ -17,8 +17,7 @@ export function Modal({ title, onClose, children }: ModalProps) {
     const panel = panelRef.current;
     // First form field if there is one (add/edit); otherwise the first button (delete confirm).
     (
-      panel?.querySelector<HTMLElement>("input, select, textarea") ??
-      panel?.querySelector<HTMLElement>("button")
+      panel?.querySelector<HTMLElement>("input, select, textarea") ?? panel?.querySelector<HTMLElement>("button")
     )?.focus();
 
     function onKey(event: KeyboardEvent) {
@@ -73,7 +72,15 @@ export function Modal({ title, onClose, children }: ModalProps) {
             aria-label="Close"
             className="rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
               <path d="M5 5l10 10M15 5L5 15" strokeLinecap="round" />
             </svg>
           </button>

@@ -92,7 +92,12 @@ export function SchedulesTab({ onConnect }: { onConnect: (destination: Destinati
               <label htmlFor="sch-template" className={labelClass}>
                 Report
               </label>
-              <select id="sch-template" value={template} onChange={(e) => setTemplate(e.target.value as TemplateId)} className={fieldClass}>
+              <select
+                id="sch-template"
+                value={template}
+                onChange={(e) => setTemplate(e.target.value as TemplateId)}
+                className={fieldClass}
+              >
                 {TEMPLATE_ORDER.map((t) => (
                   <option key={t} value={t}>
                     {TEMPLATES[t].label}
@@ -104,11 +109,18 @@ export function SchedulesTab({ onConnect }: { onConnect: (destination: Destinati
               <label htmlFor="sch-dest" className={labelClass}>
                 Send to
               </label>
-              <select id="sch-dest" value={destination} onChange={(e) => setDestination(e.target.value as DestinationId)} className={fieldClass}>
+              <select
+                id="sch-dest"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value as DestinationId)}
+                className={fieldClass}
+              >
                 {SCHEDULE_DESTINATIONS.map((d) => (
                   <option key={d} value={d}>
                     {DESTINATIONS[d].label}
-                    {DESTINATIONS[d].needsConnection && !state.connections.some((c) => c.destination === d) ? " (not connected)" : ""}
+                    {DESTINATIONS[d].needsConnection && !state.connections.some((c) => c.destination === d)
+                      ? " (not connected)"
+                      : ""}
                   </option>
                 ))}
               </select>
@@ -167,7 +179,12 @@ export function SchedulesTab({ onConnect }: { onConnect: (destination: Destinati
                 <label htmlFor="sch-weekday" className={labelClass}>
                   Day
                 </label>
-                <select id="sch-weekday" value={weekday} onChange={(e) => setWeekday(Number(e.target.value))} className={fieldClass}>
+                <select
+                  id="sch-weekday"
+                  value={weekday}
+                  onChange={(e) => setWeekday(Number(e.target.value))}
+                  className={fieldClass}
+                >
                   {WEEKDAYS.map((d, i) => (
                     <option key={d} value={i}>
                       {d}
@@ -181,7 +198,12 @@ export function SchedulesTab({ onConnect }: { onConnect: (destination: Destinati
                 <label htmlFor="sch-dom" className={labelClass}>
                   Day of month
                 </label>
-                <select id="sch-dom" value={dayOfMonth} onChange={(e) => setDayOfMonth(Number(e.target.value))} className={fieldClass}>
+                <select
+                  id="sch-dom"
+                  value={dayOfMonth}
+                  onChange={(e) => setDayOfMonth(Number(e.target.value))}
+                  className={fieldClass}
+                >
                   {DAYS.map((d) => (
                     <option key={d} value={d}>
                       {d}
@@ -194,7 +216,12 @@ export function SchedulesTab({ onConnect }: { onConnect: (destination: Destinati
               <label htmlFor="sch-hour" className={labelClass}>
                 Time
               </label>
-              <select id="sch-hour" value={hour} onChange={(e) => setHour(Number(e.target.value))} className={fieldClass}>
+              <select
+                id="sch-hour"
+                value={hour}
+                onChange={(e) => setHour(Number(e.target.value))}
+                className={fieldClass}
+              >
                 {HOURS.map((h) => (
                   <option key={h} value={h}>
                     {formatHour(h)}
@@ -219,9 +246,9 @@ export function SchedulesTab({ onConnect }: { onConnect: (destination: Destinati
         </form>
 
         <p className="mt-3 rounded-xl bg-indigo-50 p-3 text-xs leading-relaxed text-indigo-900">
-          <span className="font-semibold">How this works here:</span> a web page cannot run while it is closed. Schedules run
-          while Expense Tracker is open, and any run that came due while it was closed is made up the next time you open it
-          (marked &ldquo;catch-up&rdquo; in History). Real background jobs would need a server.
+          <span className="font-semibold">How this works here:</span> a web page cannot run while it is closed.
+          Schedules run while Expense Tracker is open, and any run that came due while it was closed is made up the next
+          time you open it (marked &ldquo;catch-up&rdquo; in History). Real background jobs would need a server.
         </p>
       </section>
 
@@ -272,7 +299,9 @@ function ScheduleCard({
   const info = DESTINATIONS[s.destination];
   const next = nextRunOf(s);
   return (
-    <article className={`rounded-2xl border bg-white p-4 shadow-sm ${s.enabled ? "border-slate-200" : "border-slate-200 opacity-75"}`}>
+    <article
+      className={`rounded-2xl border bg-white p-4 shadow-sm ${s.enabled ? "border-slate-200" : "border-slate-200 opacity-75"}`}
+    >
       <div className="flex items-start gap-3">
         <ServiceBadge destination={s.destination} />
         <div className="min-w-0 flex-1">
@@ -290,7 +319,9 @@ function ScheduleCard({
       </div>
       <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
         <dt className="text-slate-500">Next run</dt>
-        <dd className="text-slate-800">{s.enabled ? `${untilLabel(next, now)} (${formatDateTime(next.toISOString())})` : "Paused"}</dd>
+        <dd className="text-slate-800">
+          {s.enabled ? `${untilLabel(next, now)} (${formatDateTime(next.toISOString())})` : "Paused"}
+        </dd>
         <dt className="text-slate-500">Last run</dt>
         <dd className="text-slate-800">{s.lastRunAt ? timeAgo(s.lastRunAt, now) : "Never"}</dd>
       </dl>

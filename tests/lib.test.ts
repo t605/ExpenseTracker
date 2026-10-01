@@ -61,7 +61,8 @@ describe("validation", () => {
   it("accepts and normalises a good expense", () => {
     const r = validateExpense(good);
     expect(r.ok).toBe(true);
-    if (r.ok) expect(r.value).toEqual({ date: "2026-10-01", amountCents: 1250, category: "Food", description: "Lunch" });
+    if (r.ok)
+      expect(r.value).toEqual({ date: "2026-10-01", amountCents: 1250, category: "Food", description: "Lunch" });
   });
   it("reports every problem", () => {
     const r = validateExpense({ date: "", amount: "0", category: "Pets", description: " " });
@@ -83,7 +84,10 @@ describe("filter and sort", () => {
   ];
   it("filters by category, range (inclusive) and search", () => {
     expect(filterExpenses(data, { ...EMPTY_FILTERS, category: "Food" }).map((e) => e.id)).toEqual(["a", "c"]);
-    expect(filterExpenses(data, { ...EMPTY_FILTERS, from: "2026-10-01", to: "2026-10-15" }).map((e) => e.id)).toEqual(["b", "c"]);
+    expect(filterExpenses(data, { ...EMPTY_FILTERS, from: "2026-10-01", to: "2026-10-15" }).map((e) => e.id)).toEqual([
+      "b",
+      "c",
+    ]);
     expect(filterExpenses(data, { ...EMPTY_FILTERS, search: "ELEC" }).map((e) => e.id)).toEqual(["b"]);
     expect(filterExpenses(data, { ...EMPTY_FILTERS, from: "2026-11-01", to: "2026-10-01" })).toEqual([]);
   });
@@ -132,7 +136,9 @@ describe("csv", () => {
     expect(csvCell("@cmd")).toBe("'@cmd");
   });
   it("writes header and rows", () => {
-    const csv = expensesToCSV([exp({ date: "2026-10-01", amountCents: 1250, category: "Food", description: "Lunch, big" })]);
+    const csv = expensesToCSV([
+      exp({ date: "2026-10-01", amountCents: 1250, category: "Food", description: "Lunch, big" }),
+    ]);
     expect(csv).toBe('Date,Category,Description,Amount\r\n2026-10-01,Food,"Lunch, big",12.50\r\n');
   });
 });
@@ -140,7 +146,14 @@ describe("csv", () => {
 describe("storage sanitising", () => {
   it("drops damaged records and keeps good ones", () => {
     const good = exp({ id: "ok" });
-    const out = sanitizeExpenses([good, null, 5, { ...good, id: "bad1", amountCents: -1 }, { ...good, id: "bad2", category: "Pets" }, { ...good, id: "bad3", date: "2026-02-31" }]);
+    const out = sanitizeExpenses([
+      good,
+      null,
+      5,
+      { ...good, id: "bad1", amountCents: -1 },
+      { ...good, id: "bad2", category: "Pets" },
+      { ...good, id: "bad3", date: "2026-02-31" },
+    ]);
     expect(out.map((e) => e.id)).toEqual(["ok"]);
     expect(sanitizeExpenses("nope")).toEqual([]);
   });
