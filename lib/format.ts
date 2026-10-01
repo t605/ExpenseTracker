@@ -1,12 +1,12 @@
-const CURRENCY = "USD";
+import { CURRENCIES, DEFAULT_CURRENCY, type Currency } from "./currency";
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: CURRENCY,
-});
+// en-US digit grouping for every currency, so "1,234.56" looks the same whatever the symbol is.
+const currencyFormatters = Object.fromEntries(
+  CURRENCIES.map((currency) => [currency, new Intl.NumberFormat("en-US", { style: "currency", currency })]),
+) as Record<Currency, Intl.NumberFormat>;
 
-export function formatCurrency(cents: number): string {
-  return currencyFormatter.format(cents / 100);
+export function formatCurrency(cents: number, currency: Currency = DEFAULT_CURRENCY): string {
+  return currencyFormatters[currency].format(cents / 100);
 }
 
 export function parseISODate(iso: string): { year: number; month: number; day: number } | null {

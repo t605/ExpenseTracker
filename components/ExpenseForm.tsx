@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { CATEGORIES, type Expense, type ExpenseFormValues } from "@/lib/types";
 import { centsToInputValue, todayISO } from "@/lib/format";
+import { CURRENCY_INFO } from "@/lib/currency";
+import { useCurrency } from "./CurrencyProvider";
 import { MAX_DESCRIPTION, validateExpense, type FormErrors, type ValidExpense } from "@/lib/validation";
 
 interface ExpenseFormProps {
@@ -15,6 +17,7 @@ const inputClass =
   "mt-1 block w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500";
 
 export function ExpenseForm({ initial, onSubmit, onCancel }: ExpenseFormProps) {
+  const { currency } = useCurrency();
   const [values, setValues] = useState<ExpenseFormValues>(() => ({
     date: initial?.date ?? todayISO(),
     amount: initial ? centsToInputValue(initial.amountCents) : "",
@@ -66,7 +69,7 @@ export function ExpenseForm({ initial, onSubmit, onCancel }: ExpenseFormProps) {
         </div>
         <div>
           <label htmlFor="amount" className="block text-sm font-medium text-slate-700">
-            Amount ($)
+            Amount ({CURRENCY_INFO[currency].symbol})
           </label>
           <input
             id="amount"

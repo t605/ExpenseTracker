@@ -1,10 +1,14 @@
+"use client";
+
 import type { Expense } from "@/lib/types";
 import { CATEGORY_STYLES } from "@/lib/categories";
 import { categoryTotals, recentMonthTotals } from "@/lib/analytics";
-import { formatCurrency, monthLabel } from "@/lib/format";
+import { monthLabel } from "@/lib/format";
+import { useCurrency } from "./CurrencyProvider";
 
 /** Spending by category: a donut plus a legend that doubles as the accessible text. */
 export function CategoryChart({ expenses }: { expenses: Expense[] }) {
+  const { formatMoney } = useCurrency();
   const data = categoryTotals(expenses);
   if (data.length === 0) return <p className="text-sm text-slate-500">No spending to show yet.</p>;
 
@@ -42,7 +46,7 @@ export function CategoryChart({ expenses }: { expenses: Expense[] }) {
               {d.category}
             </span>
             <span className="text-slate-600">
-              {formatCurrency(d.cents)} <span className="text-slate-400">&middot; {Math.round(d.share * 100)}%</span>
+              {formatMoney(d.cents)} <span className="text-slate-400">&middot; {Math.round(d.share * 100)}%</span>
             </span>
           </li>
         ))}
@@ -53,6 +57,7 @@ export function CategoryChart({ expenses }: { expenses: Expense[] }) {
 
 /** Last six months as bars. */
 export function MonthlyChart({ expenses, now }: { expenses: Expense[]; now: Date }) {
+  const { formatMoney } = useCurrency();
   const months = recentMonthTotals(expenses, now, 6);
   const max = Math.max(...months.map((m) => m.cents), 1);
 
@@ -61,7 +66,7 @@ export function MonthlyChart({ expenses, now }: { expenses: Expense[]; now: Date
       <div className="flex h-44 items-end gap-2 sm:gap-4" role="img" aria-label="Spending per month, last six months">
         {months.map((m) => (
           <div key={m.key} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
-            <span className="text-[10px] text-slate-500 sm:text-xs">{m.cents > 0 ? formatCurrency(m.cents) : ""}</span>
+            <span className="text-[10px] text-slate-500 sm:text-xs">{m.cents > 0 ? formatMoney(m.cents) : ""}</span>
             <div
               className="w-full rounded-t-md bg-indigo-500"
               style={{ height: `${Math.max((m.cents / max) * 100, m.cents > 0 ? 3 : 0)}%` }}

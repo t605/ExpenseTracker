@@ -1,12 +1,14 @@
 "use client";
 
 import type { Expense } from "@/lib/types";
-import { formatCurrency, formatDate } from "@/lib/format";
+import { formatDate } from "@/lib/format";
 import { useExpenseActions } from "./ExpenseActions";
+import { useCurrency } from "./CurrencyProvider";
 import { CategoryBadge } from "./ui";
 
 export function ExpenseList({ expenses }: { expenses: Expense[] }) {
   const { openEdit, askDelete } = useExpenseActions();
+  const { formatMoney } = useCurrency();
 
   return (
     <ul className="divide-y divide-slate-100 rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -19,7 +21,7 @@ export function ExpenseList({ expenses }: { expenses: Expense[] }) {
               <span>{formatDate(e.date)}</span>
             </p>
           </div>
-          <p className="text-sm font-semibold tabular-nums text-slate-900">{formatCurrency(e.amountCents)}</p>
+          <p className="text-sm font-semibold tabular-nums text-slate-900">{formatMoney(e.amountCents)}</p>
           <div className="flex gap-1">
             <button
               type="button"

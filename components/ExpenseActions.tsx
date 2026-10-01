@@ -2,8 +2,9 @@
 
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import type { Expense } from "@/lib/types";
-import { formatCurrency, formatDate } from "@/lib/format";
+import { formatDate } from "@/lib/format";
 import { useExpenses } from "./ExpensesProvider";
+import { useCurrency } from "./CurrencyProvider";
 import { useToast } from "./Toasts";
 import { Modal } from "./Modal";
 import { ExpenseForm } from "./ExpenseForm";
@@ -22,6 +23,7 @@ type Dialog = { kind: "add" } | { kind: "edit"; expense: Expense } | { kind: "de
 export function ExpenseActionsProvider({ children }: { children: React.ReactNode }) {
   const { addExpense, updateExpense, deleteExpense } = useExpenses();
   const toast = useToast();
+  const { formatMoney } = useCurrency();
   const [dialog, setDialog] = useState<Dialog>(null);
   const close = useCallback(() => setDialog(null), []);
 
@@ -68,7 +70,7 @@ export function ExpenseActionsProvider({ children }: { children: React.ReactNode
       {dialog?.kind === "delete" && (
         <Modal title="Delete this expense?" onClose={close}>
           <p className="text-sm text-slate-600">
-            {dialog.expense.description} &middot; {formatCurrency(dialog.expense.amountCents)} &middot;{" "}
+            {dialog.expense.description} &middot; {formatMoney(dialog.expense.amountCents)} &middot;{" "}
             {formatDate(dialog.expense.date)}
           </p>
           <p className="mt-2 text-sm text-slate-600">This cannot be undone.</p>

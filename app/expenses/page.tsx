@@ -9,7 +9,8 @@ import { ExpenseList } from "@/components/ExpenseList";
 import { LoadingState } from "@/components/ui";
 import { EMPTY_FILTERS, filterExpenses, hasActiveFilters, sortExpenses } from "@/lib/filter";
 import { downloadCSV, expensesToCSV } from "@/lib/csv";
-import { formatCurrency, todayISO } from "@/lib/format";
+import { useCurrency } from "@/components/CurrencyProvider";
+import { todayISO } from "@/lib/format";
 import { totalCents } from "@/lib/analytics";
 import type { ExpenseFilters, SortKey } from "@/lib/types";
 
@@ -17,6 +18,7 @@ export default function ExpensesPage() {
   const { expenses, loaded } = useExpenses();
   const { openAdd } = useExpenseActions();
   const toast = useToast();
+  const { formatMoney } = useCurrency();
   const [filters, setFilters] = useState<ExpenseFilters>(EMPTY_FILTERS);
   const [sort, setSort] = useState<SortKey>("newest");
 
@@ -75,7 +77,7 @@ export default function ExpensesPage() {
         <>
           <p className="text-sm text-slate-600" aria-live="polite">
             Showing {visible.length} of {expenses.length} &middot; total{" "}
-            <span className="font-semibold text-slate-900">{formatCurrency(totalCents(visible))}</span>
+            <span className="font-semibold text-slate-900">{formatMoney(totalCents(visible))}</span>
           </p>
           <ExpenseList expenses={visible} />
         </>
