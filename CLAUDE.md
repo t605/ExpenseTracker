@@ -36,6 +36,12 @@ Honor Code forbids sharing assignment solutions unless the instructor or assessm
   (`lib/cloud/queue.ts`). An empty scheduled run is recorded as "skipped" (nothing sent). A failed scheduled run is
   NOT retried automatically (decision after the QA review, 2026-10-01). A share link is only created if the viewer's
   own limits accept it (`checkShareable`, max 5000 rows / 1 MB) and it decodes again.
+- **Formatting is automatic: Prettier (printWidth 120, line endings left as they are).** A project-level PostToolUse hook
+  (`.claude/settings.json` -> `.claude/hooks/format.mjs`) runs the LOCAL Prettier on every `.ts/.tsx/.mjs/.css/.json` file
+  right after Claude edits or writes it. It never blocks an edit (always exit 0), skips node_modules/.next/out/package-lock
+  and anything outside the project, and does not touch Markdown. `npm run format` / `npm run format:check` do the same by
+  hand. It is deliberately NOT a CI gate, so a hand-edited file can never stop a deploy. After an edit, if the next Edit
+  fails to match, Read the file first: the hook may have reformatted it.
 - **One added dependency: `qrcode-generator`** (tiny, no dependencies) for real QR codes.
 - Cloud settings/history/shares live in localStorage `expense-tracker:cloud:v1`, read in an effect and not written
   before the first successful read (same rule as the expenses).
