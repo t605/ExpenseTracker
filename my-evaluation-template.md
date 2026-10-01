@@ -80,5 +80,9 @@ Weighted score = sum of (score x weight). Show it, but do not let it decide alon
 3. **Per version:** what it is, strengths, weaknesses, risks, what was not tested.
 4. **Recommendation:** adopt, combine, or reject, with the merge order and what must be fixed first.
 5. **Open questions for me**, then **what was not checked.**
-6. If the project is finished: write "the best prompt" (what I could have said at the start to reach this result in the fewest
+6. **Publish the finished report as an Artifact** (a private page on claude.ai). Do this at the end of EVERY assignment or comparison.
+   Use the Artifact tool, starting with `action: "quickstart"`, and follow its page rules. Put in: the goal, the versions, the measured
+   numbers, the verdict, what was not tested, and links to the repo and live site if they are public. Leave out email addresses,
+   private data and anything not already public. Give me the link and say that only I can open it until I share it.
+7. If the project is finished: write "the best prompt" (what I could have said at the start to reach this result in the fewest
    rounds) and the 3 to 6 detours that cost the most rounds, each with the one sentence that would have prevented it.
