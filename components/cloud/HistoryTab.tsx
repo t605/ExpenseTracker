@@ -23,6 +23,7 @@ export function HistoryTab({ onRetry }: { onRetry: (entry: HistoryEntry) => void
   const all = state.history;
   const shown = filter === "all" ? all : all.filter((h) => h.status === filter);
   const failedCount = all.filter((h) => h.status === "failed").length;
+  const successCount = all.filter((h) => h.status === "success").length;
 
   if (all.length === 0) {
     return (
@@ -45,7 +46,7 @@ export function HistoryTab({ onRetry }: { onRetry: (entry: HistoryEntry) => void
               onClick={() => setFilter(f)}
               className={`rounded-md px-3 py-1.5 text-xs font-medium ${filter === f ? "bg-white text-indigo-700 shadow-sm" : "text-slate-600"}`}
             >
-              {f === "all" ? `All (${all.length})` : f === "success" ? `Succeeded (${all.length - failedCount})` : `Failed (${failedCount})`}
+              {f === "all" ? `All (${all.length})` : f === "success" ? `Succeeded (${successCount})` : `Failed (${failedCount})`}
             </button>
           ))}
         </div>
@@ -88,7 +89,13 @@ export function HistoryTab({ onRetry }: { onRetry: (entry: HistoryEntry) => void
                     <p className="text-sm font-semibold text-slate-900">
                       {TEMPLATES[h.template].label} to {DESTINATIONS[h.destination].label}
                     </p>
-                    {h.status === "success" ? <StatusPill tone="green">Succeeded</StatusPill> : <StatusPill tone="red">Failed</StatusPill>}
+                    {h.status === "success" ? (
+                      <StatusPill tone="green">Succeeded</StatusPill>
+                    ) : h.status === "skipped" ? (
+                      <StatusPill tone="amber">Skipped</StatusPill>
+                    ) : (
+                      <StatusPill tone="red">Failed</StatusPill>
+                    )}
                     <StatusPill tone={h.trigger === "manual" ? "slate" : "indigo"}>{TRIGGER_LABELS[h.trigger]}</StatusPill>
                   </div>
                   <p className="mt-0.5 text-xs text-slate-500">
@@ -99,6 +106,8 @@ export function HistoryTab({ onRetry }: { onRetry: (entry: HistoryEntry) => void
                       {h.detail} &middot; {h.filename} &middot; {formatBytes(h.bytes)} &middot; {h.records} expense
                       {h.records === 1 ? "" : "s"}
                     </p>
+                  ) : h.status === "skipped" ? (
+                    <p className="mt-1 text-xs text-amber-800">{h.detail}</p>
                   ) : (
                     <p className="mt-1 text-xs text-red-700">{h.error || "Failed."}</p>
                   )}

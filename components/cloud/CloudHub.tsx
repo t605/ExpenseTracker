@@ -56,15 +56,20 @@ export function CloudHub() {
             role="tab"
             id={`tab-${t.id}`}
             aria-selected={tab === t.id}
-            aria-controls={`panel-${t.id}`}
+            aria-controls={tab === t.id ? `panel-${t.id}` : undefined}
             tabIndex={tab === t.id ? 0 : -1}
             onClick={() => setTab(t.id)}
             onKeyDown={(e) => {
-              if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
               const at = tabs.findIndex((x) => x.id === tab);
-              const next = tabs[(at + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
-              setTab(next.id);
-              document.getElementById(`tab-${next.id}`)?.focus();
+              let next: number;
+              if (e.key === "ArrowRight") next = (at + 1) % tabs.length;
+              else if (e.key === "ArrowLeft") next = (at + tabs.length - 1) % tabs.length;
+              else if (e.key === "Home") next = 0;
+              else if (e.key === "End") next = tabs.length - 1;
+              else return;
+              e.preventDefault();
+              setTab(tabs[next].id);
+              document.getElementById(`tab-${tabs[next].id}`)?.focus();
             }}
             className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 py-2 text-sm font-medium transition ${
               tab === t.id ? "bg-white text-indigo-700 shadow-sm" : "text-slate-600 hover:text-slate-900"

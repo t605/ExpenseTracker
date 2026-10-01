@@ -9,7 +9,8 @@ export type DestinationId = "download" | "email" | "sheets" | "gdrive" | "dropbo
 
 export type Frequency = "daily" | "weekly" | "monthly";
 
-export type HistoryStatus = "success" | "failed";
+/** "skipped" = a scheduled run that found nothing to export (so nothing was sent). */
+export type HistoryStatus = "success" | "failed" | "skipped";
 
 /** "schedule" = ran on time while the app was open; "catch-up" = ran when the app was opened late. */
 export type Trigger = "manual" | "schedule" | "catch-up";

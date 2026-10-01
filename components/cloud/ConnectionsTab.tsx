@@ -23,7 +23,8 @@ export function ConnectionsTab({ onConnect }: { onConnect: (destination: Destina
         {CONNECTABLE.map((id) => {
           const info = DESTINATIONS[id];
           const connection = state.connections.find((c) => c.destination === id);
-          const entries = state.history.filter((h) => h.destination === id);
+          // A skipped run (nothing to send) says nothing about the connection's health.
+          const entries = state.history.filter((h) => h.destination === id && h.status !== "skipped");
           const lastEntry = entries[0];
           const okEntries = entries.filter((h) => h.status === "success");
           const usedBytes = okEntries.reduce((sum, h) => sum + h.bytes, 0);

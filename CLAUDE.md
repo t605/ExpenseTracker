@@ -32,6 +32,10 @@ Honor Code forbids sharing assignment solutions unless the instructor or assessm
   validated in `lib/cloud/share.ts`.
 - **Schedules cannot run while the page is closed.** They run while the app is open (every 30 s) and make up a
   missed run when the app is opened ("catch-up" in History). Do not claim real background jobs without a server.
+- **Exports never overlap:** every export (manual or scheduled) goes through one serial queue
+  (`lib/cloud/queue.ts`). An empty scheduled run is recorded as "skipped" (nothing sent). A failed scheduled run is
+  NOT retried automatically (decision after the QA review, 2026-10-01). A share link is only created if the viewer's
+  own limits accept it (`checkShareable`, max 5000 rows / 1 MB) and it decodes again.
 - **One added dependency: `qrcode-generator`** (tiny, no dependencies) for real QR codes.
 - Cloud settings/history/shares live in localStorage `expense-tracker:cloud:v1`, read in an effect and not written
   before the first successful read (same rule as the expenses).

@@ -20,8 +20,10 @@ export const MAX_SHARES = 10;
 /** Share links carry data, so only reasonably small ones are kept in storage. */
 export const MAX_STORED_URL = 20_000;
 
-const isTemplate = (v: unknown): v is TemplateId => typeof v === "string" && v in TEMPLATES;
-const isDestination = (v: unknown): v is DestinationId => typeof v === "string" && v in DESTINATIONS;
+// Own keys only: `"constructor" in obj` is true for every object, so `in` would accept junk names.
+const hasOwn = (obj: object, key: string) => Object.prototype.hasOwnProperty.call(obj, key);
+const isTemplate = (v: unknown): v is TemplateId => typeof v === "string" && hasOwn(TEMPLATES, v);
+const isDestination = (v: unknown): v is DestinationId => typeof v === "string" && hasOwn(DESTINATIONS, v);
 const isFrequency = (v: unknown): v is Frequency => v === "daily" || v === "weekly" || v === "monthly";
 const isTrigger = (v: unknown): v is Trigger => v === "manual" || v === "schedule" || v === "catch-up";
 const isIso = (v: unknown): v is string => typeof v === "string" && !Number.isNaN(new Date(v).getTime());
@@ -80,7 +82,7 @@ function toHistory(raw: unknown): HistoryEntry | null {
     !isIso(r.at) ||
     !isTemplate(r.template) ||
     !isDestination(r.destination) ||
-    (r.status !== "success" && r.status !== "failed") ||
+    (r.status !== "success" && r.status !== "failed" && r.status !== "skipped") ||
     !isTrigger(r.trigger)
   ) {
     return null;
@@ -115,7 +117,30 @@ function toShare(raw: unknown): ShareRecord | null {
     records: int(r.records, 0, 10_000_000) ?? 0,
     allowDownload: r.allowDownload === true,
     revoked: r.revoked === true,
-    url: str(r.url, MAX_STORED_URL),
+    url: safeShareUrl(r.url),
+  };
+}
+
+/** Only an http(s) link of a sane length is kept. Anything else (javascript:, cut-off, huge) becomes "". */
+export function safeShareUrl(value: unknown): string {
+  return typeof value === "string" && value.length <= MAX_STORED_URL && /^https?:\/\//i.test(value) ? value : "";
+}
+
+/** The history entry for a scheduled run that had nothing to export. Nothing is sent. */
+export function skippedEntry(schedule: Schedule, trigger: Trigger, now: Date, id: string): HistoryEntry {
+  return {
+    id,
+    at: now.toISOString(),
+    template: schedule.template,
+    destination: schedule.destination,
+    status: "skipped",
+    trigger,
+    records: 0,
+    bytes: 0,
+    filename: "",
+    fingerprint: "",
+    detail: "No expenses to export, nothing was sent",
+    error: "",
   };
 }
 

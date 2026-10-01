@@ -35,8 +35,8 @@ export function SharesTab() {
     try {
       const result = await createShare({ template, expiry, allowDownload });
       setShown({ url: result.url, record: result.record });
-    } catch {
-      setError("This report is too large to put in a link. Try a smaller report such as the Monthly summary.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "A link could not be created for this report.");
     } finally {
       setCreating(false);
     }

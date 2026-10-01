@@ -38,7 +38,10 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
   const [folder, setFolder] = useState("");
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<HistoryEntry | null>(null);
-  const now = useMemo(() => new Date(), []);
+  // Refreshed whenever the choice changes, so a tab left open across midnight or New Year does not preview
+  // a different date or tax year than the export will use.
+  const [now, setNow] = useState(() => new Date());
+  const otherExportRunning = activity !== null && !running;
 
   const info = DESTINATIONS[destination];
   const connection = state.connections.find((c) => c.destination === destination);
@@ -47,7 +50,9 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
 
   const needsConnect = info.needsConnection && !connection;
   const emailBad = info.kind === "email" && !isValidEmail(recipient);
-  const blocker = report.recordCount === 0
+  const blocker = otherExportRunning
+    ? "Another export is running. Please wait a moment."
+    : report.recordCount === 0
     ? "There is nothing to export for this template yet."
     : needsConnect
       ? `Connect ${info.label} to continue.`
@@ -98,6 +103,7 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
                   checked={template === id}
                   onChange={() => {
                     setTemplate(id);
+                    setNow(new Date());
                     setResult(null);
                   }}
                   className="peer sr-only"
@@ -133,6 +139,7 @@ export function ExportTab({ onConnect, onGoTo, preset }: ExportTabProps) {
                     checked={destination === id}
                     onChange={() => {
                       setDestination(id);
+                      setNow(new Date());
                       setResult(null);
                     }}
                     className="peer sr-only"

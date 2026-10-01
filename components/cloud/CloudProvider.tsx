@@ -5,9 +5,18 @@ import { downloadCSV } from "@/lib/csv";
 import { newId } from "@/lib/storage";
 import { DEMO_ACCOUNT, DESTINATIONS, SCHEDULE_DESTINATIONS } from "@/lib/cloud/catalog";
 import { isDue, nextRunOf } from "@/lib/cloud/schedule";
+import { createSerialQueue } from "@/lib/cloud/queue";
 import { buildReport, reportToCSV } from "@/lib/cloud/templates";
 import { deliveryFailure, deliverySteps, simulateDelivery } from "@/lib/cloud/simulate";
-import { buildShareUrl, createSharePayload, encodeShare, expiryFrom, type ExpiryChoice } from "@/lib/cloud/share";
+import {
+  buildShareUrl,
+  checkShareable,
+  createSharePayload,
+  decodeShare,
+  encodeShare,
+  expiryFrom,
+  type ExpiryChoice,
+} from "@/lib/cloud/share";
 import {
   CLOUD_STORAGE_KEY,
   EMPTY_CLOUD_STATE,
@@ -15,6 +24,7 @@ import {
   MAX_SHARES,
   MAX_STORED_URL,
   sanitizeCloudState,
+  skippedEntry,
 } from "@/lib/cloud/state";
 import { byteLength, isValidEmail, sha256Hex } from "@/lib/cloud/util";
 import type {
@@ -92,7 +102,8 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
   const expensesRef = useRef(expenses);
   const currencyRef = useRef(currency);
   const readOk = useRef(false);
-  const busyRef = useRef(false);
+  // Every export goes through this queue, so two exports can never overlap (manual or scheduled).
+  const queueRef = useRef(createSerialQueue());
   const checkingRef = useRef(false);
   const checkNowRef = useRef<() => void>(() => {});
   useEffect(() => {
@@ -158,7 +169,7 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
 
   /* ---------- exporting ---------- */
 
-  const runExport = useCallback(async (request: ExportRequest): Promise<HistoryEntry> => {
+  const doExport = useCallback(async (request: ExportRequest): Promise<HistoryEntry> => {
     const now = new Date();
     const report = buildReport(request.template, expensesRef.current, { now, currency: currencyRef.current });
     const csv = reportToCSV(report);
@@ -169,7 +180,6 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
     let status: HistoryEntry["status"] = "success";
     let detail = "";
     let error = "";
-    busyRef.current = true;
     try {
       if (info.kind === "local") {
         downloadCSV(filename, csv);
@@ -210,7 +220,6 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
       status = "failed";
       error = e instanceof Error ? e.message : "Something went wrong.";
     } finally {
-      busyRef.current = false;
       setActivity(null);
     }
 
@@ -231,6 +240,8 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({ ...s, history: [entry, ...s.history].slice(0, MAX_HISTORY) }));
     return entry;
   }, []);
+
+  const runExport = useCallback((request: ExportRequest) => queueRef.current.run(() => doExport(request)), [doExport]);
 
   const clearHistory = useCallback(() => setState((s) => ({ ...s, history: [] })), []);
 
@@ -276,16 +287,27 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
 
   const runSchedule = useCallback(
     async (schedule: Schedule, trigger: Trigger) => {
-      const connection = stateRef.current.connections.find((c) => c.destination === schedule.destination);
-      const entry = await runExport({
-        template: schedule.template,
-        destination: schedule.destination,
-        recipient: schedule.recipient,
-        message: "",
-        folder: connection?.folder ?? "",
-        sheetName: "",
-        trigger,
-      });
+      const now = new Date();
+      let entry: HistoryEntry;
+      const empty = buildReport(schedule.template, expensesRef.current, { now, currency: currencyRef.current }).recordCount === 0;
+      if (empty) {
+        // Nothing to send: say so in History instead of "delivering" an empty report.
+        entry = skippedEntry(schedule, trigger, now, newId());
+        setState((s) => ({ ...s, history: [entry, ...s.history].slice(0, MAX_HISTORY) }));
+      } else {
+        const connection = stateRef.current.connections.find((c) => c.destination === schedule.destination);
+        entry = await runExport({
+          template: schedule.template,
+          destination: schedule.destination,
+          recipient: schedule.recipient,
+          message: "",
+          folder: connection?.folder ?? "",
+          sheetName: "",
+          trigger,
+        });
+      }
+      // Whatever the outcome, the next attempt is the next scheduled time: a failed run is NOT retried
+      // automatically (use "Run now" or Retry in History).
       setState((s) => ({
         ...s,
         schedules: s.schedules.map((x) => (x.id === schedule.id ? { ...x, lastRunAt: new Date().toISOString() } : x)),
@@ -298,9 +320,11 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
   const runScheduleNow = useCallback(
     async (id: string) => {
       const schedule = stateRef.current.schedules.find((x) => x.id === id);
-      if (!schedule || busyRef.current) return;
+      if (!schedule || queueRef.current.pending() > 0) return;
       const entry = await runSchedule(schedule, "manual");
-      toast(entry.status === "success" ? `${schedule.name}: done` : `${schedule.name}: failed`, entry.status === "success" ? "success" : "error");
+      if (entry.status === "success") toast(`${schedule.name}: done`);
+      else if (entry.status === "skipped") toast(`${schedule.name}: no expenses to export, nothing sent`);
+      else toast(`${schedule.name}: failed`, "error");
     },
     [runSchedule, toast],
   );
@@ -316,14 +340,17 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
     if (!loaded || !expensesLoaded || !readOk.current) return;
 
     async function check() {
-      if (checkingRef.current || busyRef.current) return;
+      if (checkingRef.current || queueRef.current.pending() > 0) return;
       checkingRef.current = true;
       try {
         const now = new Date();
         const due = stateRef.current.schedules.filter((s) => isDue(s, now));
         let onTime = 0;
         let late = 0;
-        for (const schedule of due) {
+        for (const queued of due) {
+          // A run takes seconds: the schedule may have been paused, deleted or fixed since the list was made.
+          const schedule = stateRef.current.schedules.find((s) => s.id === queued.id);
+          if (!schedule || !isDue(schedule, new Date())) continue;
           const lateBy = now.getTime() - nextRunOf(schedule).getTime();
           const trigger: Trigger = lateBy > LATE_AFTER_MS ? "catch-up" : "schedule";
           await runSchedule(schedule, trigger);
@@ -358,11 +385,12 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
         allowDownload: opts.allowDownload,
         currency: currencyRef.current,
       });
-      const url = buildShareUrl(
-        window.location.origin,
-        await encodeShare(payload),
-        process.env.NEXT_PUBLIC_BASE_PATH ?? "",
-      );
+      // Same limits as the page that opens the link, checked BEFORE a link is made.
+      const check = checkShareable(payload);
+      if (!check.ok) throw new Error(check.message);
+      const encoded = await encodeShare(payload);
+      if (!(await decodeShare(encoded)).ok) throw new Error("The link could not be verified. Try a smaller report.");
+      const url = buildShareUrl(window.location.origin, encoded, process.env.NEXT_PUBLIC_BASE_PATH ?? "");
       const record: ShareRecord = {
         id,
         createdAt: now.toISOString(),

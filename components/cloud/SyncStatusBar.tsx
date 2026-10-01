@@ -8,7 +8,8 @@ import { ServiceBadge, Spinner, StatusPill } from "./ui";
 /** The "how is everything doing" strip at the top of the Cloud page. */
 export function SyncStatusBar() {
   const { state, activity } = useCloud();
-  const last = state.history[0];
+  // A skipped run (nothing to send) does not change whether things are in sync.
+  const last = state.history.find((h) => h.status !== "skipped");
   const lastOk = state.history.find((h) => h.status === "success");
   const failedSinceOk = last?.status === "failed";
   const activeSchedules = state.schedules.filter((s) => s.enabled).length;

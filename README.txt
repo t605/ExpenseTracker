@@ -105,11 +105,18 @@ Start with an empty app (see "Where your data is kept" to reset it).
     Connections: "Connect" shows a pretend consent screen (no password).
     Schedules:   daily / weekly / monthly. They run while the app is open and
       are made up when you open it again ("catch-up"). "Simulate being away"
-      demonstrates this. A web page cannot run while it is closed.
+      demonstrates this. A web page cannot run while it is closed. Exports
+      run one at a time. If there is nothing to export, the run is recorded
+      as "Skipped" and nothing is sent. A failed run is NOT retried by
+      itself: the next attempt is the next scheduled time ("Run now" or
+      "Retry" in History do it at once).
     Share links: the report is packed into the link (nothing is uploaded).
       Anyone with the link can read it; it cannot be recalled (Revoke works on
       this browser only). A QR code is shown. Opening the link shows the
-      report on the /shared page. The link only works where the app is
+      report on the /shared page. A link holds at most 5000 rows; for more
+      expenses share a summary report (Monthly summary or Category analysis).
+      Percentages in the Category analysis are rounded to one decimal, so
+      they can add up to 99.9 or 100.1; the totals row shows 100.0. The link only works where the app is
       reachable: on this computer it opens here only.
     History:     every export with time, status, size and a SHA-256 fingerprint.
 

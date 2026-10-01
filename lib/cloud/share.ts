@@ -103,6 +103,28 @@ export function validatePayload(raw: unknown): SharePayload | null {
   };
 }
 
+export type ShareCheck = { ok: true } | { ok: false; message: string };
+
+/**
+ * Checks a payload against the SAME limits the viewer applies, before a link is made. Without this a
+ * link could be created that the viewer then refuses with a misleading "damaged" message.
+ */
+export function checkShareable(payload: SharePayload): ShareCheck {
+  if (payload.rows.length > MAX_ROWS) {
+    return {
+      ok: false,
+      message: `This report has ${payload.rows.length} rows and a link can hold at most ${MAX_ROWS}. Share a summary report (Monthly summary or Category analysis) instead.`,
+    };
+  }
+  if (new TextEncoder().encode(JSON.stringify(payload)).length > MAX_DECODED_BYTES) {
+    return { ok: false, message: "This report is too large to put in a link. Share a summary report instead." };
+  }
+  if (!validatePayload(payload)) {
+    return { ok: false, message: "This report holds a value a link cannot carry, such as a very long description." };
+  }
+  return { ok: true };
+}
+
 /* ---------- encoding: JSON -> deflate -> base64url ---------- */
 
 function toBase64Url(bytes: Uint8Array): string {
