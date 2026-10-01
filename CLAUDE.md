@@ -59,21 +59,40 @@ Honor Code forbids sharing assignment solutions unless the instructor or assessm
 - `tests/lib.test.ts`, `tests/currency.test.ts`, `tests/cloud.test.ts` unit tests for `lib/`.
 
 ## Prompt for a similar project
-Written at the wrap-up (2026-10-01): the single prompt that would have reached this result in the fewest rounds.
-Copy it, replace the facts in <>, keep the structure.
+Updated at the final wrap-up (2026-10-01), replacing the first version: the single prompt that would have reached this
+result in the fewest rounds, with THIS project's real facts. The generic version for other projects is
+`D:\Michael\AI\_Shared\prompt-template.md`.
 ```
-Project: <what it is, stack>. Goal: <outcome>. Baseline: <branch/commit>.
-My environment: <OS, tools, locale, how I open the results (e.g. Excel with ";" list separator)>.
-Data facts: <languages (Hebrew/Russian), formats, units, what must never change (money = whole cents)>.
-Versions/steps: <one short brief each, ALL pasted now: V1 simple, V2 advanced local, V3 cloud demo>.
-Hard rules: branch names are exact (if one exists, rename the old one to <name>-old and tell me, never delete);
-never push, publish or change GitHub settings; never contact a real service; label everything simulated in the UI.
-Done means: tests + typecheck + lint + build pass before each commit; checked in the real browser with real data
-(Hebrew, quotes, a "=" description); tell me what was NOT tested; leave the test server running until I say stop.
-After: <publish plan: where, which version, what must not be public (email, logo, secrets)>.
+Project: ExpenseTracker, a personal expense tracker (Next.js 14 App Router, TypeScript, Tailwind, localStorage only, no
+backend) for the course "Claude Code: Software Engineering with Generative AI Agents" (Vanderbilt, on Coursera).
+Baseline: branch n-pattern-a (commit 20d7743). Goal: build the same data-export feature three ways (Best-of-N), compare
+them, then publish the best one like ClaudeCodeTipCalculator (public repo, GitHub Pages).
+
+My environment: Windows. git is not on PATH (use GitHub Desktop's git.exe). My Excel uses ";" as the list separator
+(Russian settings), so a comma CSV opens in one column unless its first line is "sep=,".
+Data facts: descriptions contain Hebrew and Russian (no fixed-font PDF libraries). Money is whole cents. Dates are local
+YYYY-MM-DD strings. Currency (shekel, dollar, euro) is a display symbol only, with no conversion.
+
+All briefs, pasted now: V1 one "Export Data" button, CSV with Date, Category, Amount, Description. V2 local dialog: CSV,
+JSON, PDF, date range, categories, preview, file name, summary, loading state. V3 cloud demo (email, Sheets, Dropbox,
+OneDrive simulated), schedules, history, share links with QR codes, report templates (tax, monthly, category), sync
+status, plus the currency choice.
+
+Hard rules: branch names are exact (if one exists, rename the old one to <name>-old and tell me, never delete). Never push,
+publish, delete or change GitHub settings: prepare, test, tell me what to click. Check the course honor code and ask the
+instructor BEFORE anything becomes public (written OK from the instructor exists, 2026-10-01, for course assignments).
+Label everything simulated in the UI and never contact a real service. No private data, keys or personal logo in a public repo.
+
+How to work: read CLAUDE.md and the code first. Measure, do not guess. Test the production build with realistic data
+(Hebrew, Russian, quotes, a "=" description, empty, a list over 5000 rows) at phone width. Before each commit run test,
+typecheck, lint, format:check and build. Run git status --short before committing (I may have committed already). Run the
+read-only qa-reviewer agent before each push and fix real findings with a test each. Read other branches with git or
+temporary worktrees, never by switching my branch. Leave the test server running until I say stop.
+At the end: the private Artifact summary, the list of what was NOT tested, and the best prompt.
 ```
 Biggest detours it prevents: V3 brief arriving late; branch-name clashes; CSV opening in one column (semicolon Excel);
-ambiguous "currency change" (display symbol only); unclear "original branch"; going public decided only at the end.
+ambiguous "currency change" (display symbol only); unclear "original branch"; going public before the honor code was
+checked; both of us committing the same changes.
 
 ## Running
 `npm install`, then `npm run dev` (add `-- -p 3123` for another port).
