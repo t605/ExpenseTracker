@@ -79,9 +79,29 @@ ambiguous "currency change" (display symbol only); unclear "original branch"; go
 `npm install`, then `npm run dev` (add `-- -p 3123` for another port).
 
 ## Testing
-`npm run test`, `npm run typecheck`, `npm run lint`, `npm run build` must all pass before a commit.
-Screens are tested by hand: see README.txt section 4. Browser screenshots were unreliable in the
-desktop app pane (timeouts); use page text / DOM checks if that happens.
+This is the QA plan. Work through the levels in order and report real numbers, never "should pass".
+
+1. **Before every commit of code:** `npm run test`, `npm run typecheck`, `npm run lint`, `npm run build` must all pass.
+   `npm run format:check` must be clean (the Prettier hook formats after each edit; `npm run format` fixes the rest).
+2. **A fix or feature needs a test.** Add a unit test for each new rule in `lib/` and for each bug fixed. Say what is NOT covered
+   (components have no automated tests: the project has no component test setup).
+3. **Before every push of code to `main`:** run the read-only `qa-reviewer` agent on the diff since the last push
+   (`git diff <last pushed commit>..HEAD`; the agent runs read-only, not on docs-only changes). Fix real findings with a test each,
+   and list what it did not review. Also run the Pages build:
+   `STATIC_EXPORT=1 NEXT_PUBLIC_BASE_PATH=/ExpenseTracker npm run build`, because that is what the deploy builds.
+4. **Screens are tested by hand** (README.txt section 4), on the PRODUCTION build (`npm run build`, then `npm run start -- -p 3123`;
+   stop the server afterwards). Use realistic data: Hebrew and Russian text, quotes, a description starting with `=`, an empty state,
+   and for share links a list over 5000 rows. Check phone width (375 px). Browser screenshots were unreliable in the desktop app pane
+   (timeouts); use page text and DOM checks if that happens.
+5. **After features are merged together** (see `/integrate-parallel-work`): re-run levels 1 to 4, and in the browser check every
+   shared hotspot screen (`app/page.tsx`, `components/Header.tsx`, `app/layout.tsx`) with both features, not only the unit tests.
+6. **After a push to `main`:** the GitHub Actions run for the newest commit must say Success, and the live site must load without
+   failed requests (read-only check in the browser pane; the user does the pushing and the GitHub settings).
+7. **Docs:** when a documented feature changes, update `docs/dev/<feature>.md` and `docs/user/<feature>.md` (`/document-feature`
+   verifies every name and screen label against the code).
+8. **Always end a QA report with what was NOT tested.** Standing gaps today: Safari and Firefox support for the compression API
+   behind share links, a screen-reader pass, exported CSV opened in Excel on other regional settings, scanning a QR code with a real
+   phone, and any real email or cloud service (all simulated).
 
 ## Git
 Branch `master` is the baseline (commit `22aafb2`). Best-of-N attempts go on their own branches

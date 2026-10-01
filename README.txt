@@ -130,18 +130,32 @@ Start with an empty app (see "Where your data is kept" to reset it).
  j) Phone layout
     Make the browser window narrow (about 375 px wide). Nothing should scroll
     sideways, and the Add / Edit window should fill the bottom of the screen.
+    On the Cloud page the top menu moves to its own row; check that "+ Add",
+    the currency box and all tabs are still reachable.
+
+ k) After features have been merged together
+    Open every screen that more than one feature changes: Dashboard, the top
+    menu (currency box, Cloud link), and the Cloud page. Add an expense, switch
+    the currency, create a share link and open it. Everything from items a) to
+    j) must still work, not only the new feature.
+
+ l) Share link limits (optional, needs a big list)
+    With more than 5000 expenses, "Full data" must refuse with a clear
+    message, and a Monthly summary link must still work.
 
 
 5. AUTOMATED CHECKS
 -------------------
-  npm run test        18 unit tests: money, dates, validation, filters,
-                      statistics, CSV, damaged-data handling
-  npm run typecheck   TypeScript
-  npm run lint        ESLint
-  npm run build       production build
+  npm run test          81 unit tests in 4 files: money, dates, validation,
+                        filters, statistics, CSV, damaged-data handling,
+                        currency, report templates, schedules, share links
+  npm run typecheck     TypeScript
+  npm run lint          ESLint
+  npm run format:check  Prettier (npm run format fixes the files)
+  npm run build         production build
 
-The tests cover the logic only. The screens (forms, dialogs, charts) are not
-covered by automated tests: use section 4.
+The tests cover the logic only. The screens (forms, dialogs, charts, the Cloud
+page) are not covered by automated tests: use section 4.
 
 
 6. WHERE YOUR DATA IS KEPT
