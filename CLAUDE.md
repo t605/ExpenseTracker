@@ -57,4 +57,19 @@ desktop app pane (timeouts); use page text / DOM checks if that happens.
 ## Git
 Branch `master` is the baseline (commit `22aafb2`). Best-of-N attempts go on their own branches
 (or worktrees) cut from the baseline commit, never on `master`.
+
+Export attempts (local branches, not pushed): `feature-data-export-v1` (one button), `-v1-excel-fix`,
+`-v2` (advanced dialog), `-v3` (cloud demo + currency), `-v3-currency-menu` (earlier mid-way v3).
+**`main` = the public release line** = V3 (currency + cloud demo) plus the GitHub Pages setup.
+
+## Public release (GitHub Pages)
+Owner decision (2026-10-01): publish V3 only, like ClaudeCodeTipCalculator; the other versions stay local.
+- `.github/workflows/deploy.yml` tests, type-checks, lints, builds a static export and deploys on push to `main`.
+- `next.config.mjs`: `STATIC_EXPORT=1` -> `output: "export"`, `NEXT_PUBLIC_BASE_PATH=/<repo>` -> `basePath`. Both are
+  OFF locally, so `npm run dev` / `npm start` are unchanged. Share links add the base path (`buildShareUrl`).
+- Order matters on GitHub (free plan: Pages needs a PUBLIC repo): make the repo public, then Settings > Pages >
+  Source = "GitHub Actions", then push `main`, then Settings > Branches > default branch = `main`.
+- Audit before going public (done): commits use the GitHub noreply address; no keys, tokens, `.env`, or personal logo;
+  the favicon is the Next.js default. No LICENSE file yet (owner's choice; without one, all rights are reserved).
+- Known harmless noise: under a sub-path Next requests `/<repo>.txt` for the home link prefetch and gets a 404.
 Windows: `git` is not on PATH; use GitHub Desktop's bundled `git.exe`.

@@ -165,8 +165,9 @@ export async function decodeShare(fragment: string): Promise<DecodeResult> {
   }
 }
 
-export function buildShareUrl(origin: string, encoded: string): string {
-  return `${origin}/shared#${encoded}`;
+/** `basePath` is the sub-folder the site lives in when hosted (e.g. "/ExpenseTracker" on GitHub Pages), or "". */
+export function buildShareUrl(origin: string, encoded: string, basePath = ""): string {
+  return `${origin}${basePath}/shared#${encoded}`;
 }
 
 /** Links on this computer only work on this computer. */

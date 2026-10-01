@@ -358,7 +358,11 @@ export function CloudProvider({ children }: { children: React.ReactNode }) {
         allowDownload: opts.allowDownload,
         currency: currencyRef.current,
       });
-      const url = buildShareUrl(window.location.origin, await encodeShare(payload));
+      const url = buildShareUrl(
+        window.location.origin,
+        await encodeShare(payload),
+        process.env.NEXT_PUBLIC_BASE_PATH ?? "",
+      );
       const record: ShareRecord = {
         id,
         createdAt: now.toISOString(),

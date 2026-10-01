@@ -295,6 +295,7 @@ describe("share links", () => {
 
   it("builds the link and spots local addresses", () => {
     expect(buildShareUrl("https://app.example", "abc")).toBe("https://app.example/shared#abc");
+    expect(buildShareUrl("https://t605.github.io", "abc", "/ExpenseTracker")).toBe("https://t605.github.io/ExpenseTracker/shared#abc");
     expect(isLocalOrigin("http://localhost:3123")).toBe(true);
     expect(isLocalOrigin("http://127.0.0.1:3000")).toBe(true);
     expect(isLocalOrigin("https://app.example")).toBe(false);
