@@ -3,7 +3,9 @@
 ## What it is
 A personal expense tracker (Next.js 14 App Router, TypeScript, Tailwind). Built as Assignment 1 of the
 Vanderbilt course "Claude Code: Software Engineering with Generative AI Agents", and used as the
-base for the Best-of-N pattern exercises. Private GitHub repository (`t605/ExpenseTracker`).
+base for the Best-of-N pattern exercises. Public GitHub repository (`t605/ExpenseTracker`) with a live site on
+GitHub Pages. Publishing was cleared with the course instructor by email on 2026-10-01 (keep that email: the Coursera
+Honor Code forbids sharing assignment solutions unless the instructor or assessment allows it). License: MIT.
 
 ## Decisions (do not "correct")
 - **Next.js 14 pinned**, as the assignment specifies. Do not upgrade to the newest Next.js.

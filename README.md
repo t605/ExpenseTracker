@@ -69,3 +69,7 @@ name (`NEXT_PUBLIC_BASE_PATH`). Locally these settings are off, so `npm run dev`
 - One extra dependency, `qrcode-generator`, for real QR codes.
 
 `README.txt` holds the manual test checklist.
+
+## License
+
+MIT, see [LICENSE](LICENSE).
